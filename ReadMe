@@ -1,0 +1,9 @@
+
+
+		CHESS ENGINE
+
+  Old school chess interface to play computer.
+  ->NOT ALL RULES IMPLEMENTED
+  Only random engine supported so far.
+  **Moving to vector space boards**
+  bitboards would be better
