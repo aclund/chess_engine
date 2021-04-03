@@ -10,7 +10,12 @@ using namespace std;
 
 void set_moves( ) {
 
-	en_passant = -1;
+	params[0] = turn; // turn
+	params[1] =    1; // White Castle right
+	params[2] =    1; // White Castle left
+	params[3] =    1; // Black Castle right
+	params[4] =    1; // Black Castle left
+	params[5] =   -1; // en_passant
 
 //	Find all knight moves for each square
 	int i_knight_moves[8] = { -17, -15, -10, -6, 6, 10, 15, 17 };

@@ -7,9 +7,13 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-	bool read_fen;
+	bool read_fen = false;
+	bool random = false;
+	bool run    = true;
 	for( int i = 1; i < argc; i++ ) {
 		if( strcmp(argv[i], "-fen") == 0 ) { read_fen = true; }
+		if( strcmp(argv[i], "-r"  ) == 0 ) { run = false; random = true; }
+		if( strcmp(argv[i], "-off") == 0 ) { run = false; }
 	}
 	if( read_fen ) { convert_fen(); }
 	else{ 
@@ -20,7 +24,6 @@ int main(int argc, char *argv[]) {
 
 	set_moves();
 
-	bool random = true;
 	while( true ) {
 		write_board();
 		if( turn == user_turn ) {
@@ -30,8 +33,11 @@ int main(int argc, char *argv[]) {
 			if( random ) {
 				random_player();
 			}
-			else {
+			else if( run ) {
 				engine();
+			}
+			else {
+				move();
 			}
 		}
 		turn *= -1;

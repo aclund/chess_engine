@@ -25,6 +25,9 @@ const int b_rook   = -rook;
 const int b_queen  = -queen;
 const int b_king   = -king;
 
+int piece_score[12] = { -9999, -800, -500, -300, -300, -100, 100, 300, 300, 500, 800, 9999 };
+// b_king, b_queen, b_rook, b_bishop, b_knight, b_pawn, w_pawn, w_knight, w_bishop, w_rook, w_queen, w_king
+
 int board[8][8] = { {w_rook, w_knight, w_bishop, w_queen, w_king, w_bishop, w_knight, w_rook},
 		    {w_pawn, w_pawn,   w_pawn,   w_pawn,  w_pawn, w_pawn,   w_pawn,   w_pawn},
 		    {0, 0, 0, 0, 0, 0, 0, 0},
@@ -38,3 +41,4 @@ int index_directions[8] = {  8,  1, -8, -1,  9, -7, -9,  7 };
 int row_directions[8]   = {  1,  0, -1,  0,  1, -1, -1,  1 };
 int col_directions[8]   = {  0,  1,  0, -1,  1,  1, -1, -1 };
 int knight_moves[64][8], n_knight_moves[64], count_to_edge[64][8];
+int params[6];

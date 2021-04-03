@@ -39,15 +39,16 @@ int valid_move(string move_AN, int ierr) {
 	bool found_piece = false;
 	for( int n_read = 0; n_read < move_AN.length(); n_read++ ) {
 		read = move_AN[n_read];
-		if(  string_move_piece.find(read) != string::npos ) {
+		if(  string_move_piece.find(read) != string::npos &&
+			move_AN.length() != 2 && !found_piece ) {
 			move_piece = turn*piece_convert(read);
 			found_piece = true;
 		}
-		if( move_letter_square.find(read) != string::npos ) {
+		else if( move_letter_square.find(read) != string::npos ) {
 			move_square[0] = read;
 			letters++;
 		}
-		if( move_number_square.find(read) != string::npos ) {
+		else if( move_number_square.find(read) != string::npos ) {
 			move_square[1] = read;
 			numbers++;
 		}
@@ -68,7 +69,7 @@ int valid_move(string move_AN, int ierr) {
 	// Find and check target square
 	index_square(move_square, &move_row, &move_column); 
 	move_index = rc2index(move_row, move_column);
-	//cout<< move_piece << "   " << move_row << " : " << move_column << " move_index = " << move_index <<endl;
+	cout<< move_piece << "   " << move_row << " : " << move_column << " move_index = " << move_index <<endl;
 
 	if( board[move_row][move_column]*turn > 0 ) { // Your piece on square
 		cout << "Occupado\n";
@@ -90,8 +91,7 @@ int valid_move(string move_AN, int ierr) {
 		}
 	}
 	n_possible_moves = 0;
-	all_moves(possible_boards[0], &possible_boards[1]);
-	//all_moves(board_in, possible_boards);
+	all_moves(possible_boards[0], params, &possible_boards[1], turn);
 	cout << "# Possible Moves = " << n_possible_moves << "\n";
 
 	int index = 0;

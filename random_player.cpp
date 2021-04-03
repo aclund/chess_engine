@@ -26,7 +26,7 @@ void random_player() {
 		}
 	}
 	n_possible_moves = 0;
-	all_moves(board_in, possible_boards);
+	all_moves(board_in, params, possible_boards, turn);
 	cout << "# Possible Moves = " << n_possible_moves << "\n";
 
 	srand (time(NULL));

@@ -10,17 +10,28 @@ using namespace std;
 void squares( int row ) {
 	Color::Modifier black(Color::FG_BLACK);
 	Color::Modifier white(Color::FG_WHITE);
+	Color::Modifier back_black(Color::BG_BLACK);
+	Color::Modifier back_white(Color::BG_WHITE);
 	Color::Modifier def(Color::FG_DEFAULT);
+	Color::Modifier back_def(Color::BG_DEFAULT);
 
 	string piece;
+	int col = row%2;
         for( int i = 0; i < 8; i++ ) {
 
-		if( abs(board[row][i]) == pawn   ) { piece = "p"; }
-		if( abs(board[row][i]) == knight ) { piece = "n"; }
-		if( abs(board[row][i]) == bishop ) { piece = "b"; }
-		if( abs(board[row][i]) == rook   ) { piece = "r"; }
-		if( abs(board[row][i]) == queen  ) { piece = "q"; }
-		if( abs(board[row][i]) == king   ) { piece = "k"; }
+		if( abs(board[row][i]) == pawn   ) { piece = "\u2659"; }
+		if( abs(board[row][i]) == knight ) { piece = "\u2658"; }
+		if( abs(board[row][i]) == bishop ) { piece = "\u2657"; }
+		if( abs(board[row][i]) == rook   ) { piece = "\u2656"; }
+		if( abs(board[row][i]) == queen  ) { piece = "\u2645"; }
+		if( abs(board[row][i]) == king   ) { piece = "\u2654"; }
+
+		if( col%2 == 0 ) {
+			cout << back_black;
+		}
+		else {
+			cout << back_white;
+		}
 
 		if( board[row][i] == 0 ) {
 			cout << "    ";
@@ -29,7 +40,12 @@ void squares( int row ) {
 		} else if( board[row][i] < 0 ) {
 			cout << " " << black << piece << def <<"  ";
 		}
+
+		cout << back_def;
+		col++;
 	}
+
+	cout << back_def << def;
 	
 	return;
 }
@@ -42,7 +58,9 @@ void write_board( ) {
 
 	int row;
         for( int i = 0; i < 8; i++ ) {
-		row = 8 - i;
+		if(      user_turn == -1 ) { row = i + 1; }
+		else if( user_turn ==  1 ) { row = 8 - i; }
+		else{ cout << " ERROR in write_board\n"; }
 		cout << row << "|";
                 squares(row-1);
 		if( i != 7 ) {

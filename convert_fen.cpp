@@ -16,7 +16,7 @@ void convert_fen() {
 	int board_in[8][8];
 
 	ifstream fenfile;
-	fenfile.open("test.fen");
+	fenfile.open("position.fen");
 	fenfile.seekg(0, ios::end);   
 	FEN.reserve(fenfile.tellg());
 	fenfile.seekg(0, ios::beg);
