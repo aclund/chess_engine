@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include<bits/stdc++.h>
 
 using namespace std;
 
@@ -37,6 +38,84 @@ int valid_move(string move_AN, int ierr) {
 	int letters = 0;
 	char read;
 	bool found_piece = false;
+
+	// Lower case input
+	transform(move_AN.begin(), move_AN.end(), move_AN.begin(), ::tolower);
+
+	// If castle
+	if( move_AN.find('o') != string::npos ) {
+		n_possible_moves = -1;
+
+		int castle_o = 0;
+		for( int n_read = 0; n_read < move_AN.length(); n_read++ ) {
+			read = move_AN[n_read];
+			if( read == 'o' ) castle_o++;
+		}
+
+        	int castle_offset = 0;
+        	if( params[0] == -1 ) { castle_offset = 2; }
+
+		// King/Rook positions rc
+		int castle_row = 0 + 7*((1-params[0])/2);
+		int king_col   = 4;
+
+		// Board for check_check
+		int n_checks = 0, check_pieces[2], board_in[64], counter = 0;
+		for( int row = 0; row < 8; row++ ) {
+			for( int col = 0; col < 8; col++ ) {
+				board_in[counter] = board[row][col];
+				counter++;
+			}
+		}
+
+		if(      castle_o == 2 && params[1+castle_offset] == 1 &&
+		    board[castle_row][king_col+1] == 0 &&
+		    board[castle_row][king_col+2] == 0 ) { // castle_k
+
+			int index_s = rc2index(castle_row,king_col);
+			for( int index = 0; index < 3; index++ ) {
+				check_check( index_s+index, board_in, params, check_pieces, &n_checks );
+				if( n_checks != 0 ) {
+					cout << " Castling through check!\n";
+					return 1;
+				}
+			}
+			int rook_col = 7;
+			board[castle_row][king_col] = 0;
+			board[castle_row][rook_col] = 0;
+
+			board[castle_row][king_col+2] = king*params[0];
+			board[castle_row][rook_col-2] = rook*params[0];
+			return 0;
+		}
+		else if( castle_o == 3 && params[2+castle_offset] == 1 &&
+		    board[castle_row][king_col-1] == 0 && 
+		    board[castle_row][king_col-2] == 0 && 
+		    board[castle_row][king_col-3] == 0 ) { // castle_q
+
+			int index_s = rc2index(castle_row,king_col);
+			for( int index = 0; index < 4; index++ ) {
+				check_check( index_s-index, board_in, params, check_pieces, &n_checks );
+				if( n_checks != 0 ) {
+					cout << " Castling through check!\n";
+					return 1;
+				}
+			}
+			int rook_col = 0;
+			board[castle_row][king_col] = 0;
+			board[castle_row][rook_col] = 0;
+
+			board[castle_row][king_col-2] = king*params[0];
+			board[castle_row][rook_col+3] = rook*params[0];
+			return 0;
+		}
+		else {
+			cout << " Can't castle!\n";
+			return 1;
+		}
+	}
+
+	// Convert user input to move
 	for( int n_read = 0; n_read < move_AN.length(); n_read++ ) {
 		read = move_AN[n_read];
 		if(  string_move_piece.find(read) != string::npos &&
@@ -56,7 +135,7 @@ int valid_move(string move_AN, int ierr) {
 	if( !found_piece ) { move_piece = turn*pawn; }
 	if( numbers != 1 ) { cout << "ONE row number only!!!\n"; return 1; }
 	if( letters  < 1 ) { cout << "NO square letter?\n"; return 1; }
-	// b is a duplicate and not handled
+	// b is a duplicate and semi handled
 	else if( letters  > 1 ) {
 		for( int n_read = 0; n_read < move_AN.length(); n_read++ ) {
                 	read = move_AN[n_read];
@@ -69,7 +148,7 @@ int valid_move(string move_AN, int ierr) {
 	// Find and check target square
 	index_square(move_square, &move_row, &move_column); 
 	move_index = rc2index(move_row, move_column);
-	cout<< move_piece << "   " << move_row << " : " << move_column << " move_index = " << move_index <<endl;
+	//cout<< move_piece << "   " << move_row << " : " << move_column << " move_index = " << move_index <<endl;
 
 	if( board[move_row][move_column]*turn > 0 ) { // Your piece on square
 		cout << "Occupado\n";
@@ -79,8 +158,10 @@ int valid_move(string move_AN, int ierr) {
 	// Load board into temporary for some reason then find every possible move
 	int max_tree = 111;
 	int **possible_boards = new int*[max_tree];
+	int **possible_params = new int*[max_tree];
 	for( int i = 0; i < max_tree; i++ ) {
 		possible_boards[i] = new int[64]; 
+		possible_params[i] = new int[n_params]; 
 	}
 
 	int count = 0;
@@ -91,8 +172,18 @@ int valid_move(string move_AN, int ierr) {
 		}
 	}
 	n_possible_moves = 0;
-	all_moves(possible_boards[0], params, &possible_boards[1], turn);
+	all_moves(possible_boards[0], params, &possible_boards[1], &possible_params[1]);
 	cout << "# Possible Moves = " << n_possible_moves << "\n";
+
+/*
+	for( int n_boards = 1; n_boards < n_possible_moves + 1; n_boards++ ) {
+		write_from2d(&possible_boards[n_boards]);
+		for( int i = 0; i < n_params; i++ ) {
+			cout << possible_params[n_boards][i] << " ";
+		}
+		cout << "\n\n";
+	}
+*/
 
 	int index = 0;
 	for( int n_boards = 1; n_boards < n_possible_moves + 1; n_boards++ ) {
@@ -105,19 +196,33 @@ int valid_move(string move_AN, int ierr) {
 					index++;
 				}
 			}
-			index = 0;
+			
+			for( int i = 0; i < n_params; i++ ) {
+				params[i] = possible_params[n_boards][i];
+			}
+			//cout << " EN PASSANT & = " << params[5] << "\n";
 			//write_board();
 
 			// Delete tree
 			for( int i = 0; i < max_tree; i++ ) {
 				delete [] possible_boards[i];
+				delete [] possible_params[i];
 			}
 			delete [] possible_boards;
+			delete [] possible_params;
 
 			return 0;
 		}
 	}
 
-	// Move not found
+	// Move not found!
+	// Delete tree
+	for( int i = 0; i < max_tree; i++ ) {
+		delete [] possible_boards[i];
+		delete [] possible_params[i];
+	}
+	delete [] possible_boards;
+	delete [] possible_params;
+
 	return 1;
 }

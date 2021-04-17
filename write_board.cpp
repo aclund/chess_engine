@@ -69,5 +69,17 @@ void write_board( ) {
 			cout << "\n\n";
 		}
 	}
+
+	if(      params[0] ==  1 ) { cout << " WHITE to move: "; }
+	else if( params[0] == -1 ) { cout << " BLACK to move: "; }
+	else { cout << " ERROR: i_turn in write "; }
+
+	if( params[1] == 1 ) { cout << "K"; }
+	if( params[2] == 1 ) { cout << "Q"; }
+	if( params[3] == 1 ) { cout << "k"; }
+	if( params[4] == 1 ) { cout << "q"; }
+
+	cout << "  " << params[5] << "\n";
+
 	return;
 }

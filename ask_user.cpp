@@ -6,7 +6,7 @@ using namespace std;
 #include "global.h"
 #include "functions.h"
 
-void ask_user() {
+void ask_user( bool engine ) {
 
 	bool found;
 
@@ -33,13 +33,15 @@ void ask_user() {
 
 
 	// MAX DEPTH
-	found = false;
-	while( found == false ) {
-		cout << " Ender Maximum Search Depth\n";
-		cin >> max_depth;
-		if( max_depth > 0 && max_depth < 11 ) { found = true; }
-		else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }
-		else { cout << " ERROR\n"; }
+	if( engine ) {
+		found = false;
+		while( found == false ) {
+			cout << " Ender Maximum Search Depth\n";
+			cin >> max_depth;
+			if( max_depth > 0 && max_depth < 11 ) { found = true; }
+			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }
+			else { cout << " ERROR\n"; }
+		}
 	}
 
 	return;

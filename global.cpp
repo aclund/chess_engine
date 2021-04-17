@@ -1,6 +1,8 @@
 #include "global.h"
 
-int user_turn, max_depth;
+int pawn_counter = 0, knight_counter = 0, bishop_counter = 0, rook_counter = 0, queen_counter = 0, king_counter = 0;
+
+int user_turn = 1, max_depth;
 
 int move_index, move_row, move_column, from_index, from_row, from_column, move_piece, turn,
     n_possible_moves, en_passant;
@@ -41,4 +43,5 @@ int index_directions[8] = {  8,  1, -8, -1,  9, -7, -9,  7 };
 int row_directions[8]   = {  1,  0, -1,  0,  1, -1, -1,  1 };
 int col_directions[8]   = {  0,  1,  0, -1,  1,  1, -1, -1 };
 int knight_moves[64][8], n_knight_moves[64], count_to_edge[64][8];
-int params[6];
+int n_params = 6;
+int *params;

@@ -42,8 +42,8 @@ void engine() {
 	double duration;
 
 	// Load board into temporary for some reason then find every possible move
-	const int i_64 = 64;
-	const int i_6  = 6;
+	const int i_64     = 64;
+	const int i_param  = n_params;
 	int max_tree = 11111111;
 	int size_add = 2;
 	int **possible_boards;
@@ -52,7 +52,7 @@ void engine() {
 	all_params      = (int **)malloc(sizeof(int * )*max_tree);
 	for( int i = 0; i < max_tree; i++ ) {
 		possible_boards[i] = (int *)malloc(sizeof(int) *i_64);
-		all_params[i]      = (int *)malloc(sizeof(int) *i_6 );
+		all_params[i]      = (int *)malloc(sizeof(int) *i_param);
 	}
 
 	// Set current board
@@ -63,31 +63,36 @@ void engine() {
 			count++;
 		}
 	}
+	for( int n = 0; n < n_params; n++ ) {
+		all_params[0][n] = params[n];
+	}
 
 	// Find depth 0
 	n_possible_moves = 0;
-	all_moves(possible_boards[0], params, &possible_boards[1], turn);
+	all_moves(possible_boards[0], all_params[0], &possible_boards[1], &all_params[1]);
+	// Update turn
+	for( int i = 1; i < n_possible_moves + 1; i ++ ) {
+		all_params[i][0] *= -1;
+	}
 
 	int i_start = 1;
 	int i_end   = i_start + n_possible_moves;
 	cout << " There are " << i_end - i_start << " possible moves!\n\n";
+	if( n_possible_moves == 0 ) { return; }
 
 	// Find all moves in depth
 	int engine_board = 0;
 	int move_counter = 0;
 	int i_open = n_possible_moves + 1;
-	int i_turn = turn;
 
 	for( int depth = 0; depth < max_depth; depth++ ) {
 
 		start = clock();
 
-		i_turn *= -1;
 		for( int i = i_start; i < i_end; i++ ) {
 			//write_from2d(&possible_boards[i]);
 
-			//all_moves(possible_boards[i], &params[i], &possible_boards[i_open], i_turn);
-			all_moves(possible_boards[i], params, &possible_boards[i_open], i_turn);
+			all_moves(possible_boards[i], all_params[i], &possible_boards[i_open], &all_params[i_open]);
 
 			i_open = n_possible_moves + 1;
 
@@ -97,7 +102,7 @@ void engine() {
 				all_params      = (int **)realloc(possible_boards, sizeof(int **)*max_tree);
 				for( int i = max_tree/size_add; i < max_tree; i++ ) {
 					possible_boards[i] = (int *)malloc(sizeof(int) *i_64);
-					all_params[i]      = (int *)malloc(sizeof(int) *i_6 );
+					all_params[i]      = (int *)malloc(sizeof(int) *i_param);
 				}
 			}
 		}
@@ -107,6 +112,11 @@ void engine() {
 		i_end_depth  [depth] = i_end;
 		cout << " move " << (depth+1) << " # Possible Moves = " << i_end - i_start << "\n";
 		cout << " Time used: " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
+
+		// Update turn
+		for( int n = i_open - n_possible_moves; n < i_open; n++ ) {
+			all_params[n][0] *= -1;
+		}
 
 	}
 
@@ -133,6 +143,9 @@ void engine() {
 			board[row][col] = possible_boards[engine_board][index];
 			index++;
 		}
+	}
+	for( int i = 0; i < n_params; i++ ) {
+		params[i] = all_params[engine_board][i];
 	}
 
 	// Save best moves
