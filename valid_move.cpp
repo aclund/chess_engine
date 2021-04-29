@@ -177,7 +177,7 @@ int valid_move(string move_AN, int ierr) {
 
 /*
 	for( int n_boards = 1; n_boards < n_possible_moves + 1; n_boards++ ) {
-		write_from2d(&possible_boards[n_boards]);
+		write_from2d(&possible_boards[n_boards], true);
 		for( int i = 0; i < n_params; i++ ) {
 			cout << possible_params[n_boards][i] << " ";
 		}

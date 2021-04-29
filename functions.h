@@ -26,7 +26,7 @@ bool in_range(int,int);
 int rc2index(int,int);
 void index2rc(int,int*,int*);
 int pawn_rel_rank(int, int);
-void write_from2d(int**);
+void write_from2d(int**,bool);
 
 
 #endif

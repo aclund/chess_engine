@@ -21,20 +21,38 @@ int pawn_rel_rank( int i, int i_turn ) {
 	//cout << "i, rel_rank = " << i << " "<< rel_rank << "\n";
 	return rel_rank; 
 }
-void write_from2d( int **possible_boards ) {
+void write_from2d( int **possible_boards, bool flip ) {
 	cout << "\n";
-	int index = 0;
-	for( int row = 0; row < 8; row++ ) {
-		for( int col = 0; col < 8; col++ ) {
-			if( possible_boards[0][index] < 0 ) {
-				cout << possible_boards[0][index] << " ";
+	if( flip ) { 
+		int index = 56;
+		for( int row = 0; row < 8; row++ ) {
+			for( int col = 0; col < 8; col++ ) {
+				if( possible_boards[0][index] < 0 ) {
+					cout << possible_boards[0][index] << " ";
+				}
+				else {
+					cout << " " << possible_boards[0][index] << " ";
+				}
+				index++;
 			}
-			else {
-				cout << " " << possible_boards[0][index] << " ";
-			}
-			index++;
+			index-=16;
+			cout << "\n";
 		}
-		cout << "\n";
+	}
+	else {
+		int index = 0;
+		for( int row = 0; row < 8; row++ ) {
+			for( int col = 0; col < 8; col++ ) {
+				if( possible_boards[0][index] < 0 ) {
+					cout << possible_boards[0][index] << " ";
+				}
+				else {
+					cout << " " << possible_boards[0][index] << " ";
+				}
+				index++;
+			}
+			cout << "\n";
+		}
 	}
         return;
 }

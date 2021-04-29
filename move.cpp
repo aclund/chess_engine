@@ -22,18 +22,16 @@ void move( ) {
 	while( ierr != 0 ) {
 		cout << "Enter move\n";
 		cin >> move_AN;
+		cout << "\n";
 		move_AN = removeSpaces(move_AN);
 	
-		n_possible_moves = -1;
 		ierr = valid_move(move_AN,ierr);
-
-		if( n_possible_moves == 0 ) { return; }
 
 		if( ierr != 0 ) {
 			//cout << "Ima stupid cunt\n";
 			move_AN.clear();
 		}
-		cout << "\n";
+		else if( n_possible_moves == 0 ) { return; }
 	}
 
 	return;

@@ -90,7 +90,7 @@ void engine() {
 		start = clock();
 
 		for( int i = i_start; i < i_end; i++ ) {
-			//write_from2d(&possible_boards[i]);
+			//write_from2d(&possible_boards[i], true);
 
 			all_moves(possible_boards[i], all_params[i], &possible_boards[i_open], &all_params[i_open]);
 

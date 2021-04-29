@@ -58,9 +58,12 @@ void write_board( ) {
 
 	int row;
         for( int i = 0; i < 8; i++ ) {
+/*
 		if(      user_turn == -1 ) { row = i + 1; }
 		else if( user_turn ==  1 ) { row = 8 - i; }
 		else{ cout << " ERROR in write_board\n"; }
+*/
+row = 8 - i;
 		cout << row << "|";
                 squares(row-1);
 		if( i != 7 ) {

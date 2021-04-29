@@ -20,6 +20,7 @@ void ask_user( bool engine ) {
 	// COLOR
 	string color;
 	found = false;
+found = true; user_turn = -1*turn;
 	while( found == false ) {
 		cout << " Pick a Color to Play (w/b)\n";
 		cin >> color;
@@ -38,7 +39,7 @@ void ask_user( bool engine ) {
 		while( found == false ) {
 			cout << " Ender Maximum Search Depth\n";
 			cin >> max_depth;
-			if( max_depth > 0 && max_depth < 11 ) { found = true; }
+			if( max_depth >= 0 && max_depth < 11 ) { found = true; }
 			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }
 			else { cout << " ERROR\n"; }
 		}

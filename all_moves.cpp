@@ -172,14 +172,21 @@ void all_moves( int *board_in, int *board_params, int **possible_boards, int **p
 
 			for( int i = 0; i < possem; i++ ) {
 
-				store_board( board_in, update_params[i], possible_boards, possible_params,
-					     board_in[index], index, to_squares[i] );
-
 				// Capture en passant
 				if( abs(board_in[index]) == pawn && to_squares[i] == board_params[5] ) { 
-					i_en_passant = to_squares[i] - 8*board_params[0];
-					possible_boards[n_open-1][i_en_passant] = 0;
+					check_check( index_king, board_in, board_params, check_pieces, &n_checks );
+					if( n_checks == 0 ) {
+						i_en_passant = to_squares[i] - 8*board_params[0];
+						possible_boards[n_open-1][i_en_passant] = 0;
+					}
+					store_board( board_in, update_params[i], possible_boards, possible_params,
+						     board_in[index], index, to_squares[i] );
 				}
+				else {
+
+					store_board( board_in, update_params[i], possible_boards, possible_params,
+						     board_in[index], index, to_squares[i] );
+
 
 				// Castle
 	int castle_offset = 0;
@@ -187,6 +194,9 @@ void all_moves( int *board_in, int *board_params, int **possible_boards, int **p
 	bool castle_k = false, castle_q = false;
         if( board_params[1+castle_offset] == 1 ) castle_k = true;
         if( board_params[2+castle_offset] == 1 ) castle_q = true;
+
+
+				}
 
 				// Reset params
 				for( int n = 0; n < n_params-1; n++ ) {

@@ -29,15 +29,15 @@ void random_player() {
 	}
 	n_possible_moves = 0;
 	all_moves(board_in, params, possible_boards, possible_params);
-///*
+/*
 	for( int n_boards = 0; n_boards < n_possible_moves ; n_boards++ ) {
-		write_from2d(&possible_boards[n_boards]);
+		write_from2d(&possible_boards[n_boards], true);
 		for( int i = 0; i < n_params; i++ ) {
 			cout << possible_params[n_boards][i] << " ";
 		}
 		cout << "\n\n";
 	}
-//*/
+*/
 	cout << "# Possible Moves = " << n_possible_moves << "\n";
 	if( n_possible_moves == 0 ) { return; }
 

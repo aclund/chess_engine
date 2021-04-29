@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
 			}
 			else if( run ) {
 				engine();
+				break;
 			}
 			else {
 				move();

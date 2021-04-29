@@ -20,6 +20,8 @@ void piece_moves( int *board_in, int *board_params, int **update_params, int ind
 	int pawn_off_right = 40 - (1-i_turn)/2*17; // 40/23
 	int pawn_off_left  = 31 - (1-i_turn)/2;    // 31/32
 
+	int check_pieces[2], n_checks;
+
 	int piece = i_turn*board_in[index];
 
 	switch(piece) {
@@ -157,11 +159,16 @@ void piece_moves( int *board_in, int *board_params, int **update_params, int ind
 			index_update = index + index_directions[n_direction];
 			if( count_to_edge[index][n_direction] != 0 &&
 			    board_in[index_update]*i_turn <= 0 ) {
-				to_square[counter] = index_update;
+
+				check_check( index_update, board_in, board_params, check_pieces, &n_checks );
+	//cout << " index, n_checks = " << index_update << " " << n_checks << endl;
+				if( n_checks == 0 ) {
+					to_square[counter] = index_update;
 	king_counter++;
-				update_params[counter][1+castle_offset] = 0;
-				update_params[counter][2+castle_offset] = 0;
-				counter++;
+					update_params[counter][1+castle_offset] = 0;
+					update_params[counter][2+castle_offset] = 0;
+					counter++;
+				}
 			}
 		}
 	break;
