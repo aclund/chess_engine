@@ -4,45 +4,45 @@ using namespace std;
 
 #include "functions.h"
 #include "global.h"
+#include "initialize.h"
+#include "convert_binary.h"
+#include "piece_moves.h"
+#include "check_check.h"
 
-bool game_over() {
+bool game_over( Chess_Board chess_board ) {
 
 	bool is_over = false;
 
-	int max_tree = 111;
-	int **possible_boards = new int*[max_tree];
-	int **possible_params = new int*[max_tree];
-	for( int i = 0; i < max_tree; i++ ) {
-		possible_boards[i] = new int[64]; 
-		possible_params[i] = new int[n_params]; 
-	}
+	int n_possible_moves = 0;
+	Moves *moves_null = newMoves( chess_board.Parameters, max_moves );
+	all_moves( chess_board, moves_null, &n_possible_moves );
+	free( moves_null );
 
-	int count = 0;
-	for( int row = 0; row < 8; row++ ) {
-		for( int col = 0; col < 8; col++ ) {
-			possible_boards[0][count] = board[row][col];
-			count++;
-		}
-	}
-	n_possible_moves = 0;
-	all_moves(possible_boards[0], params, &possible_boards[1], &possible_params[1]);
-
-	int n_checks = 0;
-	int check_pieces[2];
 	if( n_possible_moves == 0 ) {
+        	int i_turn;
+		Pieces *your_pieces, *their_pieces;
+        	switch( chess_board.Parameters & 1 ) {
+          	case 0: // White to Move
+                	your_pieces  = &chess_board.White;
+                	their_pieces = &chess_board.Black;
+        	        i_turn = 1;
+	          break;
+          	case 1: // Black to Move
+                	your_pieces  = &chess_board.Black;
+                	their_pieces = &chess_board.White;
+                	i_turn = -1;
+          	break;
+		}
+
 		is_over = true;
-		write_board();
+		convert2board();
+		write_board( board, params );
 
-		int index_king;
-		int i_turn = params[0];
-		for( int index = 0; index < 64; index++ ) {
-        	        if( possible_boards[0][index] == i_turn*king ) {
-                	        index_king = index;
-                       	 break;
-                	}
-        	}
+		int n_checks = 0;
+		Moves_temp *check_pieces = newTemp(2);
+		check_check( your_pieces->King, your_pieces->All, their_pieces, 
+			     ~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
 
-		check_check( index_king, possible_boards[0], params, check_pieces, &n_checks );
 		if( n_checks == 0 ) {
 			cout << " STALEMATE! \n";
 		}
@@ -50,15 +50,6 @@ bool game_over() {
 			cout << " CHECKMATE! \n";
 		}
 	}
-
-
-	// Delete tree
-	for( int i = 0; i < max_tree; i++ ) {
-		delete [] possible_boards[i];
-		delete [] possible_params[i];
-	}
-	delete [] possible_boards;
-	delete [] possible_params;
 
 	return is_over;
 }

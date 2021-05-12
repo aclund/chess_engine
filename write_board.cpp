@@ -7,7 +7,7 @@ using namespace std;
 #include "global.h"
 #include "colormod.h"
 
-void squares( int row ) {
+void squares( int board_in[64], int row ) {
 	Color::Modifier black(Color::FG_BLACK);
 	Color::Modifier white(Color::FG_WHITE);
 	Color::Modifier back_black(Color::BG_BLACK);
@@ -19,12 +19,12 @@ void squares( int row ) {
 	int col = row%2;
         for( int i = 0; i < 8; i++ ) {
 
-		if( abs(board[row][i]) == pawn   ) { piece = "\u2659"; }
-		if( abs(board[row][i]) == knight ) { piece = "\u2658"; }
-		if( abs(board[row][i]) == bishop ) { piece = "\u2657"; }
-		if( abs(board[row][i]) == rook   ) { piece = "\u2656"; }
-		if( abs(board[row][i]) == queen  ) { piece = "\u2645"; }
-		if( abs(board[row][i]) == king   ) { piece = "\u2654"; }
+		if( abs(board_in[row*8+i]) == pawn   ) { piece = "\u2659"; }
+		if( abs(board_in[row*8+i]) == knight ) { piece = "\u2658"; }
+		if( abs(board_in[row*8+i]) == bishop ) { piece = "\u2657"; }
+		if( abs(board_in[row*8+i]) == rook   ) { piece = "\u2656"; }
+		if( abs(board_in[row*8+i]) == queen  ) { piece = "\u2645"; }
+		if( abs(board_in[row*8+i]) == king   ) { piece = "\u2654"; }
 
 		if( col%2 == 0 ) {
 			cout << back_black;
@@ -33,11 +33,11 @@ void squares( int row ) {
 			cout << back_white;
 		}
 
-		if( board[row][i] == 0 ) {
+		if( board_in[row*8+i] == 0 ) {
 			cout << "    ";
-		} else if( board[row][i] > 0 ) {
+		} else if( board_in[row*8+i] > 0 ) {
 			cout << " " << white << piece << def << "  ";
-		} else if( board[row][i] < 0 ) {
+		} else if( board_in[row*8+i] < 0 ) {
 			cout << " " << black << piece << def <<"  ";
 		}
 
@@ -50,7 +50,7 @@ void squares( int row ) {
 	return;
 }
 
-void write_board( ) {
+void write_board( int board_in[64], int params_in[n_params] ) {
 
 	cout << "\n";
 	cout << "   A   B   C   D   E   F   G   H\n";
@@ -61,11 +61,11 @@ void write_board( ) {
 /*
 		if(      user_turn == -1 ) { row = i + 1; }
 		else if( user_turn ==  1 ) { row = 8 - i; }
-		else{ cout << " ERROR in write_board\n"; }
+		else{ cout << " ERROR in write_board_in\n"; }
 */
 row = 8 - i;
 		cout << row << "|";
-                squares(row-1);
+                squares(board_in, row-1);
 		if( i != 7 ) {
 			cout << "\n" << " |\n";
 		} else {
@@ -73,16 +73,16 @@ row = 8 - i;
 		}
 	}
 
-	if(      params[0] ==  1 ) { cout << " WHITE to move: "; }
-	else if( params[0] == -1 ) { cout << " BLACK to move: "; }
+	if(      params_in[0] ==  1 ) { cout << " WHITE to move: "; }
+	else if( params_in[0] == -1 ) { cout << " BLACK to move: "; }
 	else { cout << " ERROR: i_turn in write "; }
 
-	if( params[1] == 1 ) { cout << "K"; }
-	if( params[2] == 1 ) { cout << "Q"; }
-	if( params[3] == 1 ) { cout << "k"; }
-	if( params[4] == 1 ) { cout << "q"; }
+	if( params_in[1] == 1 ) { cout << "K"; }
+	if( params_in[2] == 1 ) { cout << "Q"; }
+	if( params_in[3] == 1 ) { cout << "k"; }
+	if( params_in[4] == 1 ) { cout << "q"; }
 
-	cout << "  " << params[5] << "\n";
+	cout << "  " << params_in[5] << "\n";
 
 	return;
 }

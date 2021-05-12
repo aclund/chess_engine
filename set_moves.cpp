@@ -1,8 +1,4 @@
-#include <string>
 #include <iostream>
-#include <fstream>
-#include <algorithm>
-
 using namespace std;
 
 #include "functions.h"
@@ -10,30 +6,23 @@ using namespace std;
 
 void set_moves( ) {
 
-	params[0] = turn; // turn
-	params[1] =    1; // White Castle King side
-	params[2] =    1; // White Castle Queen side
-	params[3] =    1; // Black Castle king side
-	params[4] =    1; // Black Castle queen side
-	params[5] =   -1; // en_passant target index
-
 //	Find all knight moves for each square
 	int i_knight_moves[8] = { -17, -15, -10, -6, 6, 10, 15, 17 };
 	int r_knight_moves[8] = { -2, -2, -1, -1,  1,  1,  2,  2 };
 	int c_knight_moves[8] = { -1,  1, -2,  2, -2,  2, -1,  1 };
 	int index_update, row_update, col_update;
-	int index_current = 0;
-	int n_count = 0;
+	int index_current = 0, n_count = 0;
 	for( int row = 0; row < 8; row++ ) {
 		for( int col = 0; col < 8; col++ ) {
-			n_knight_moves[index_current] = 0;
+                        n_knight_moves[index_current] = 0;
 			for( int n_moves = 0; n_moves < 8; n_moves++ ) {
+				knight_squares[index_current][n_moves] = 0;
 				index_update = index_current + i_knight_moves[n_moves];
 				row_update = row + r_knight_moves[n_moves];
 				col_update = col + c_knight_moves[n_moves];
 				if( in_range(row_update,col_update) ) {
-					n_knight_moves[index_current]++;
-					knight_moves[index_current][n_count] = index_update;
+                                        n_knight_moves[index_current]++;
+					BIT_FLIP(knight_squares[index_current][n_count],index_update);
 					n_count++;
 				}
 			}
@@ -42,14 +31,15 @@ void set_moves( ) {
 		}
 	}
 
-	/*
+	///*
 	for( int i = 0; i < 64; i++ ) {
+		//cout << "i, n_knights = " << i << "  " << n_knight_moves[i] << endl;
 		for( int n = 0; n < n_knight_moves[i]; n++ ) {
-			cout << knight_moves[i][n] << " ";
+			//print_binary( knight_squares[i][n] ); cout << endl;
 		}
-		cout << "\n";
+		//cout << "\n\n";
 	}
-	*/
+	//*/
 
 //	Calculate number of squares to edge for each direction
 //                              n,  e,  s,  w, ne, se, sw, nw 

@@ -1,218 +1,312 @@
 #include <iostream>
-
 using namespace std;
 
-#include "functions.h"
 #include "global.h"
+#include "functions.h"
+#include "initialize.h"
+#include "convert_binary.h"
+#include "piece_moves.h"
+#include "check_check.h"
 
-int n_open;
+int n_moves;
 
-void store_board( int board_update[64], int *update_params, int **possible_boards, int **possible_params,
-		  int piece, int index_from, int index_update ) {
-	//cout << " index_from, index_update = " << index_from << "  " << index_update << "\n";
-	for( int i = 0; i < 64; i++ ) {
-		possible_boards[n_open][i] = board_update[i];
+inline uint64_t find_pins(Moves*,uint16_t,Pieces*,Pieces*,uint64_t,Moves_temp,int,int,int);
+inline int add_pin_moves(Moves*,uint16_t,uint64_t,uint64_t,Pieces*,Pieces*,uint64_t,uint64_t,uint64_t,int);
+
+void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves ) {
+
+	n_moves = 0;
+
+	Pieces *your_pieces, *their_pieces;
+
+	int i_turn;
+	switch( chess_board.Parameters & 1 ) {
+	  case 0: // White to Move
+		your_pieces  = &chess_board.White;
+		their_pieces = &chess_board.Black;
+		i_turn = 1;
+	  break;
+	  case 1: // Black to Move
+		your_pieces  = &chess_board.Black;
+		their_pieces = &chess_board.White;
+		i_turn = -1;
+	  break;
 	}
-	possible_boards[n_open][index_from] = 0; 
-	possible_boards[n_open][index_update] = piece;
+	//cout << "i_turn =" << i_turn << endl;
 
-	// Store new params
-	for( int n = 0; n < n_params; n++ ) {
-		possible_params[n_open][n] = update_params[n];
-	}
+        int t_en_passant = 0, bit2 = 32;
+        for( int i = 5; i < 11; i++ ) {
+                if( (chess_board.Parameters >> i) & 1 ) {
+                        t_en_passant += bit2;
+                }
+                bit2 /= 2;
+        }
+	//cout << t_en_passant << " t_en_passant\n";
 
-	n_open++;
-	n_possible_moves++;
+	uint64_t not_all_pieces = ~chess_board.All_Pieces;
 
-	return;
-}
+	int n_checks;
+	Moves_temp *check_pieces = newTemp(2);
+	check_check( your_pieces->King, your_pieces->All, their_pieces, 
+		     not_all_pieces, i_turn, check_pieces, &n_checks );
 
-void all_moves( int *board_in, int *board_params, int **possible_boards, int **possible_params ) {
-
-	n_open = 0;
-
-	int max_moves = 27;
-        int **update_params = new int*[max_moves];
-        for( int i = 0; i < max_moves; i++ ) {
-                update_params[i] = new int[n_params];
-		for( int n = 0; n < n_params-1; n++ ) {
-			update_params[i][n] = board_params[n];
-		}
-		update_params[i][5] = -1;
-	}
-
-	int i_turn = board_params[0];
-	int n_count, index_update, index_king, piece, possem, check_possem;
-	int n_checks = 0, n_not_free = 0;
-	int pins[64], to_squares[max_moves], check_pieces[2], null_check[2], out_check_pieces[max_moves];
-	int promote_pieces = 4;
-	int castle_offset = 0;
-	if( i_turn == -1 ) { castle_offset = 2; }
-
-	// index_king
-	for( int index = 0; index < 64; index++ ) {
-		if( board_in[index] == i_turn*king ) {
-			index_king = index;
-			break;
-		}
-	}
-
-	check_check( index_king, board_in, board_params, check_pieces, &n_checks );
-
-	// Find all pinned pieces AND can move out of single pin with capture
-	int save_piece, n_check_pins;
-	for( int index = 0; index < 64; index++ ) {
-		n_check_pins = 0;
-		if( board_in[index]*i_turn > 0 && abs(board_in[index]) != king ) { // Your piece on square
-			save_piece      = board_in[index];
-			board_in[index] = 0;       // Remove and check_check
-			check_check( index_king, board_in, board_params, check_pieces, &n_check_pins );
-			board_in[index] = save_piece;
-
-			if( n_check_pins > n_checks ) { // Pin = true
-				piece_moves( board_in, board_params, update_params, index, to_squares, &possem );
-				for( int i = 0; i < possem; i++ ) {
-					if( to_squares[i] == check_pieces[0] ) { // Capture pin
-
-						store_board( board_in, update_params[0], possible_boards, possible_params, 
-                                        		     save_piece, index, check_pieces[0] );
-
-						// Move along pin
-						int total_direction = check_pieces[0] - index;
-						int piece_case = save_piece; 
-						if( piece_case == queen ) {
-							if(      total_direction%7 == 0 ) piece_case = 3;
-							else if( total_direction%9 == 0 ) piece_case = 3;
-							else piece_case = 4;
-						}
-
-						int open_squares = 0;
-						switch (piece_case) {
-						case 3: // diag
-							if(      total_direction%7 == 0 ) {
-								open_squares = total_direction/7 - 1;
-							}
-							else if( total_direction%9 == 0 ) {
-								open_squares = total_direction/9 - 1;
-							}
-						break;
-						case 4: // file
-							if(      total_direction%8 == 0 ) {
-								open_squares = total_direction/8 - 1;
-							}
-							else {
-								open_squares = total_direction/1 - 1;
-							}
-						break;
-						}
-
-						for( int s = 0; s < open_squares; s++ ) {
-							int dir = total_direction/(open_squares+1);
-							store_board( board_in, update_params[0], possible_boards,
-							   possible_params, save_piece, index, index+(s+1)*dir );
-						}
-
-					}
-					// Reset params
-					for( int n = 0; n < n_params-1; n++ ) {
-						update_params[i][n] = board_params[n];
-					}
-					update_params[i][5] = -1;
-				}
-			}
-		}
-		pins[index] = n_check_pins - n_checks; // Could be > 1
-	}
-
-	if( n_checks > 0 ) {
-		if( n_checks == 2 ) {
-			piece_moves( board_in, board_params, update_params, index_king, to_squares, &possem );
-			for( int i = 0; i < possem; i++ ) {
-				check_check( to_squares[i], board_in, board_params, null_check, &n_not_free );
-				if( n_not_free == 0 ) {
-					store_board( board_in, update_params[i], possible_boards, possible_params,
-					             king, index_king, to_squares[i] );
-					possible_params[n_open][1+castle_offset] = 0;
-					possible_params[n_open][2+castle_offset] = 0;
-				}
-			}
-		}
-		else {
-			in_check( board_in, board_params, pins, check_pieces[0], out_check_pieces,
-				  to_squares, &check_possem );
-			for( int i = 0; i < check_possem; i++ ) { 
-
-				store_board( board_in, update_params[i], possible_boards, possible_params,
-					     board_in[out_check_pieces[i]], out_check_pieces[i], to_squares[i] );
-
-				// Reset params
-				for( int n = 0; n < n_params-1; n++ ) {
-					update_params[i][n] = board_params[n];
-				}
-				update_params[i][5] = -1;
-			}
-		}
-
-		// Delete temp params
-        	for( int i = 0; i < max_moves; i++ ) {
-        	        delete [] update_params[i];
-		}
-		delete [] update_params;
-
+	// Double Check is simplest case
+	if( n_checks == 2 ) {
+		n_moves += king_moves  ( &moves_add[n_moves], your_pieces->King,    your_pieces->All, their_pieces, 
+				 	 not_all_pieces, i_turn );
+		*n_possible_moves = n_moves;
 		return;
 	}
 
-	// Find moves not involving check
-	int i_en_passant;
-	for( int index = 0; index < 64; index++ ) {
+	// Find Pinned Pieces
+//BROKE
+//cout << "Out of first check_check #" << n_checks; print_binary(check_pieces[0].bitmove);cout<<endl<<endl;
+	uint64_t pinned = find_pins( &moves_add[n_moves], chess_board.Parameters, your_pieces, their_pieces, not_all_pieces,
+				     check_pieces[0], n_checks, t_en_passant, i_turn );
+	//cout << " Pinned = "; print_binary(pinned);cout << endl;
 
-		if( board_in[index]*i_turn > 0 && pins[index] == 0 ) { // Your piece on square can move
+	// IF in CHECK
+//cout << "n_checks :" << n_checks << endl;
+	if( n_checks == 1 ) {
+		n_moves += in_check( &moves_add[n_moves], chess_board, check_pieces[0],
+				     pinned, t_en_passant );
+		*n_possible_moves = n_moves;
+		return;
+	}
 
-			piece_moves( board_in, board_params, update_params, index, to_squares, &possem );
+	// Add moves by each piece group
+	n_moves += pawn_moves  ( &moves_add[n_moves], your_pieces->Pawns,   their_pieces->All, not_all_pieces, ~pinned,
+				  t_en_passant, i_turn );
+	//cout << "  Pawn   Moves = " << n_moves << endl;
+	n_moves += knight_moves( &moves_add[n_moves], your_pieces->Knights, their_pieces->All, not_all_pieces, ~pinned );
+	//cout << " +Knight Moves = " << n_moves << endl;
+	n_moves += bishop_moves( &moves_add[n_moves], your_pieces->Bishops, their_pieces->All, not_all_pieces, ~pinned );
+	//cout << " +Bishop Moves = " << n_moves << endl;
+	n_moves += rook_moves  ( &moves_add[n_moves], your_pieces->Rooks,   their_pieces->All, not_all_pieces, ~pinned,
+				 i_turn );
+	//cout << " +Rook   Moves = " << n_moves << endl;
+	n_moves += queen_moves ( &moves_add[n_moves], your_pieces->Queens,  their_pieces->All, not_all_pieces, ~pinned );
+	//cout << " +Queen  Moves = " << n_moves << endl;
 
-			for( int i = 0; i < possem; i++ ) {
+	n_moves += king_moves  ( &moves_add[n_moves], your_pieces->King, your_pieces->All, their_pieces, 
+				 not_all_pieces, i_turn );
+	//cout << " +King   Moves = " << n_moves << endl;
 
-				// Capture en passant
-				if( abs(board_in[index]) == pawn && to_squares[i] == board_params[5] ) { 
-					check_check( index_king, board_in, board_params, check_pieces, &n_checks );
-					if( n_checks == 0 ) {
-						i_en_passant = to_squares[i] - 8*board_params[0];
-						possible_boards[n_open-1][i_en_passant] = 0;
-					}
-					store_board( board_in, update_params[i], possible_boards, possible_params,
-						     board_in[index], index, to_squares[i] );
+	// CAN Castle
+	int bit_offset = 0;
+	int index_king = 4;
+	if( i_turn == -1 ) {
+		bit_offset = 2;
+		index_king = 60;
+	}
+	
+	uint64_t castle_through;
+	if( (chess_board.Parameters >> (1+bit_offset)) & 1 and
+	    (not_all_pieces >> (index_king+1)) & 1 and
+	    (not_all_pieces >> (index_king+2)) & 1 ) {  // Castle king
+		castle_through = 0;
+		BIT_SET( castle_through, index_king+1 );
+		check_check( castle_through, your_pieces->All, their_pieces, 
+			     not_all_pieces, i_turn, check_pieces, &n_checks );
+		if( n_checks == 0 ) {
+			castle_through = 0;
+			BIT_SET( castle_through, index_king+2 );
+			check_check( castle_through, your_pieces->All, their_pieces, 
+				     not_all_pieces, i_turn, check_pieces, &n_checks );
+			if( n_checks == 0 ) {
+		cout << i_turn << " CAN Castle King\n";
+				BIT_SET( moves_add[n_moves].bitmove, index_king   );
+				BIT_SET( moves_add[n_moves].bitmove, index_king+3 );
+				moves_add[n_moves].piece = 0;
+				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
+				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
+				n_moves++;
+			}
+		}
+	}
+	if( (chess_board.Parameters >> (2+bit_offset)) & 1 and
+	    (not_all_pieces >> (index_king-1)) & 1 and
+	    (not_all_pieces >> (index_king-2)) & 1 and
+	    (not_all_pieces >> (index_king-3)) & 1 ) {  // Castle queen
+		castle_through = 0;
+		BIT_SET( castle_through, index_king-1 );
+		check_check( castle_through, your_pieces->All, their_pieces, 
+			     not_all_pieces, i_turn, check_pieces, &n_checks );
+		if( n_checks == 0 ) {
+			castle_through = 0;
+			BIT_SET( castle_through, index_king-2 );
+			check_check( castle_through, your_pieces->All, their_pieces, 
+				     not_all_pieces, i_turn, check_pieces, &n_checks );
+			if( n_checks == 0 ) {
+		cout << i_turn << " CAN Castle Queen\n";
+				BIT_SET( moves_add[n_moves].bitmove, index_king   );
+				BIT_SET( moves_add[n_moves].bitmove, index_king-4 );
+				moves_add[n_moves].piece = 0;
+				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
+				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
+				n_moves++;
+			}
+		}
+	}
+		
+
+	//cout << " # Possible Moves = " << n_moves << endl;
+/*
+	for( int n = 0; n < n_moves; n++ ) {
+		print_binary(moves_add[n].bitmove); cout<<endl;
+	}
+*/
+	*n_possible_moves = n_moves;
+	return;
+}
+
+inline uint64_t find_pins( Moves *moves_add, uint16_t param_bits, Pieces *your_pieces, Pieces *their_pieces, uint64_t not_all_pieces,
+		           Moves_temp existing_check, int n_checks, int t_en_passant, int i_turn ) {
+
+	uint64_t pinned = 0;
+
+	// Find all piece indices except king to remove
+	int max_pieces = 17;
+	int indices[max_pieces];
+	uint64_t remove_bits = your_pieces->All;
+	remove_bits ^= your_pieces->King;
+	for( int i = 0; i < max_pieces; i++ ) {
+		indices[i] = -1;
+	}
+	convert_binary( remove_bits, indices );
+	remove_bits |= your_pieces->King;
+/*
+	for( int i = 0; i < max_pieces; i++ ) {
+		cout << indices[i] << endl;
+	}
+	cout << endl;
+*/
+
+	int i = 0;
+	int n_check_pins;
+	Moves_temp *check_pieces = newTemp(5);
+	uint64_t all_flip = not_all_pieces;
+	//while( indices[i] != -1 or i == max_pieces - 1 ) {
+	while( indices[i] != -1 ) {
+		BIT_FLIP( remove_bits, indices[i] );
+		BIT_FLIP( all_flip, indices[i] );
+		check_check( your_pieces->King, remove_bits, their_pieces, all_flip, i_turn, check_pieces, &n_check_pins );
+//cout << " Checking index " << indices[i] << " n_check_reveal = " << n_check_pins <<endl; print_binary(remove_bits);cout<<endl;
+
+		// Pin = True
+		if( n_check_pins > n_checks ) {
+//cout << "FOUND PIN at " << indices[i] << endl;
+			if( n_checks == 0 ) {
+				uint64_t pinned_bit = 0;
+				BIT_SET( pinned_bit, indices[i] );
+				n_moves += add_pin_moves( &moves_add[n_moves], param_bits, pinned_bit, check_pieces[0].bitmove,
+							  your_pieces, their_pieces, not_all_pieces, pinned, t_en_passant, i_turn );
+			}
+			BIT_SET( pinned, indices[i] );
+		}
+
+		BIT_FLIP( remove_bits, indices[i] );
+		BIT_FLIP( all_flip, indices[i] );
+		i++;
+	}
+	return pinned;
+}
+
+inline int add_pin_moves( Moves *moves_pin, uint16_t param_bits, uint64_t pinned_bit, uint64_t checker_bits, Pieces *your_pieces,
+			  Pieces *their_pieces, uint64_t not_all_pieces, uint64_t pinned, uint64_t t_en_passant, int i_turn ) {
+
+	Moves *move_sluts = newMoves( param_bits, max_moves );
+
+	// Find Remaining moves for pinned piece
+	int np_pin_sluts = 0;
+	if(      (your_pieces->Pawns & pinned_bit)   != 0 ) {
+		np_pin_sluts = pawn_moves  ( &move_sluts[np_pin_sluts], your_pieces->Pawns,   their_pieces->All,
+					     not_all_pieces, ~pinned, t_en_passant, i_turn );
+	}
+	else if( (your_pieces->Knights & pinned_bit) != 0 ) {
+		np_pin_sluts = knight_moves( &move_sluts[np_pin_sluts], your_pieces->Knights, their_pieces->All,
+					     not_all_pieces, ~pinned );
+	}
+	else if( (your_pieces->Bishops & pinned_bit) != 0 ) {
+		np_pin_sluts = bishop_moves( &move_sluts[np_pin_sluts], your_pieces->Bishops, their_pieces->All,
+					     not_all_pieces, ~pinned );
+	}
+	else if( (your_pieces->Rooks & pinned_bit)   != 0 ) {
+		np_pin_sluts = rook_moves  ( &move_sluts[np_pin_sluts], your_pieces->Rooks,   their_pieces->All,
+					     not_all_pieces, ~pinned, i_turn );
+	}
+	else if( (your_pieces->Queens & pinned_bit) != 0 ) {
+		np_pin_sluts = queen_moves ( &move_sluts[np_pin_sluts], your_pieces->Queens,  their_pieces->All,
+					     not_all_pieces, ~pinned );
+	}
+/*
+print_binary(checker_bits); cout << endl;
+cout << " moves total pinned but do i even need to search " << np_pin_sluts << endl;
+for( int i = 0; i < np_pin_sluts; i++ ) {
+	print_binary(move_sluts[i].bitmove); cout << "  " << move_sluts[i].piece << endl;
+}
+*/
+
+	for( int i = 0; i < np_pin_sluts; i++ ) {
+		if( (move_sluts[i].bitmove & checker_bits) != 0 ) { // Capture pin
+//cout << " I found you you sneaky bastard: "; print_binary(move_sluts[i].bitmove & checker_bits); cout << endl;
+
+			moves_pin[n_moves] = move_sluts[i];
+			n_moves++;
+
+			// Move along pin
+			int index_checker;
+			convert_binary( checker_bits, &index_checker );
+			int index_king;
+			convert_binary( your_pieces->King, &index_king );
+			int index_pinned;
+			convert_binary( pinned_bit, &index_pinned  );
+			int total_direction = index_checker - index_king;
+			int piece_case = move_sluts[i].piece; 
+//cout << " Piece_case :"<<piece_case << " " << total_direction << endl;
+			if( piece_case == queen ) {
+				if(      total_direction%7 == 0 ) piece_case = 3;
+				else if( total_direction%9 == 0 ) piece_case = 3;
+				else piece_case = 4;
+			}
+
+			int open_squares = 0;
+			switch (piece_case) {
+			case 3: // diag
+				if(      total_direction%7 == 0 ) {
+					open_squares = total_direction/7 - 1;
+				}
+				else if( total_direction%9 == 0 ) {
+					open_squares = total_direction/9 - 1;
+				}
+			break;
+			case 4: // file
+				if(      total_direction%8 == 0 ) {
+					open_squares = total_direction/8 - 1;
 				}
 				else {
-
-					store_board( board_in, update_params[i], possible_boards, possible_params,
-						     board_in[index], index, to_squares[i] );
-
-
-				// Castle
-	int castle_offset = 0;
-	if( i_turn == -1 ) castle_offset = 2;
-	bool castle_k = false, castle_q = false;
-        if( board_params[1+castle_offset] == 1 ) castle_k = true;
-        if( board_params[2+castle_offset] == 1 ) castle_q = true;
-
-
+					open_squares = total_direction/1 - 1;
 				}
+			break;
+			}
 
-				// Reset params
-				for( int n = 0; n < n_params-1; n++ ) {
-					update_params[i][n] = board_params[n];
+			for( int s = 0; s < open_squares; s++ ) {
+				int dir = total_direction/(open_squares+1);
+				if( index_king+(s+1)*dir != index_pinned ) {
+					Moves along_pin = move_sluts[i];
+					along_pin.bitmove = 0;
+					BIT_SET( along_pin.bitmove, index_pinned );
+					BIT_SET( along_pin.bitmove, index_king+(s+1)*dir );
+					
+//print_binary( along_pin.bitmove ); cout << endl;
+					moves_pin[n_moves] = along_pin;
+					n_moves++;
 				}
-				update_params[i][5] = -1;
 			}
 
 		}
 	}
+	free( move_sluts );
 
-	// Delete temp params
-        for( int i = 0; i < max_moves; i++ ) {
-                delete [] update_params[i];
-	}
-	delete [] update_params;
-
-	return;
+	return n_moves;
 }

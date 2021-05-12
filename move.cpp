@@ -25,10 +25,11 @@ void move( ) {
 		cout << "\n";
 		move_AN = removeSpaces(move_AN);
 	
-		ierr = valid_move(move_AN,ierr);
+		int n_possible_moves;
+		ierr = valid_move( move_AN, &n_possible_moves, ierr );
 
 		if( ierr != 0 ) {
-			//cout << "Ima stupid cunt\n";
+			cout << " Either I suck at coding or you've forgotten the rules of CHESS!\n";
 			move_AN.clear();
 		}
 		else if( n_possible_moves == 0 ) { return; }

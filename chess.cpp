@@ -7,6 +7,9 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
+	int ierr;
+	params = new int[n_params];
+
 	bool read_fen = false;
 	bool random = false;
 	bool run    = true;
@@ -16,22 +19,20 @@ int main(int argc, char *argv[]) {
 		if( strcmp(argv[i], " -off") == 0 ) { run = false; }
 		if( strcmp(argv[i], "--off") == 0 ) { run = false; }
 	}
-	if( read_fen ) { convert_fen(); }
-	else{ 
-		turn = 1;
-	}
+	if( read_fen ) { ierr = convert_fen(); }
+	else{ set_bitboards( ); }
+	if( ierr != 0 ) { return 0; }
 
-	params = new int[n_params];
-
-	if( run or random ) {
-		ask_user(run);
-	}
+	if( run or random ) { ask_user(run); }
 
 	set_moves();
 
 	while( true ) {
-		write_board();
-		if( turn == user_turn ) {
+		ierr = check_bits( bitboards );
+		if( ierr != 0 ) { break; }
+		convert2board();
+		write_board(board,params);
+		if( params[0] == user_turn ) {
 			move();
 		}
 		else {
@@ -46,20 +47,12 @@ int main(int argc, char *argv[]) {
 				move();
 			}
 		}
-/*
-	cout << " king " << king_counter << endl;
-	cout << " queen " << queen_counter << endl;
-	cout << " rook " << rook_counter << endl;
-	cout << " bishop " << bishop_counter << endl;
-	cout << " knight " << knight_counter << endl;
-	cout << " pawn " << pawn_counter << endl;
-*/
 
-		params[0] *= -1;
-		turn *= -1;
+		if( game_over( bitboards ) ) { break; }
 
-		if( game_over() ) { break; }
 	}
+
+	free( params );
 
 	return 0;
 }

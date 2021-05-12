@@ -14,13 +14,12 @@ void ask_user( bool engine ) {
 	cout << "  Welcome to SHIT Chess \n\n";
 	cout << "  The only chess program worse than you!\n";
 	cout << "  I would wish you luck but the rules are faulty SO\n";
-	cout << "  GO FUCK YOURSELF\n\n";
 
 
 	// COLOR
 	string color;
 	found = false;
-found = true; user_turn = -1*turn;
+found = true; user_turn = -1*params[0];
 	while( found == false ) {
 		cout << " Pick a Color to Play (w/b)\n";
 		cin >> color;

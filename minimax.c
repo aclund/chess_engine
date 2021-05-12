@@ -10,7 +10,7 @@ int minimax( int **possible_boards, int depth, int alpha, int beta, bool maxer )
 	int eval, max_eval, min_eval;
 	int i_start = 0, i_end = 0;
 
-	if( depth == 0 or game_over() ) return score(possible_boards[0]);
+	if( depth == 0 or game_over( chess_board ) ) return score(possible_boards[0]);
 
 	if( maxer ) {
 		max_eval = -99999999;

@@ -5,7 +5,8 @@ OPTFlag    =
 #CHESSFiles   = chess.cpp global.cpp write_board.cpp move.cpp valid_move.cpp index_square.cpp convert_fen.cpp set_moves.cpp
 CHESSFiles  := $(shell ls *.cpp)
 CHESSoFiles  = ${CHESSFiles:.cpp=.o}
-HEADERFiles  = functions.h global.h colormod.h
+HEADERFiles  = functions.h global.h piece_moves.h piece_moves.h check_check.h preform_move.h initialize.h
+#HEADERFiles  = 
 
 all: chess
 
