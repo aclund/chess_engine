@@ -33,10 +33,10 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 		if( preform.piece == 10 ) {
 			temp  = preform.bitmove;
 			temp &= ~curr_pieces->Pawns;
-print_binary( temp ); cout << endl;
+//print_binary( temp ); cout << endl;
 			int take_pawn;
 			convert_binary( temp, &take_pawn );
-cout << take_pawn <<endl;
+//cout << take_pawn <<endl;
 			take_pawn += 8*i_turn;
 			BIT_FLIP( other_pieces->Pawns, take_pawn );
 			BIT_FLIP( other_pieces->All,   take_pawn );
@@ -163,7 +163,7 @@ cout << take_pawn <<endl;
 	  break;
 
 	  default:
-		cout << "ERROR piece in preform\n";
+		cout << "ERROR piece in preform " << preform.piece << "\n";
 	  break;
 	}
 

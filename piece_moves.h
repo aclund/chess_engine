@@ -1,4 +1,3 @@
-///*
 inline int rel_rank( int i, int i_turn ) {
 	return int((1-i_turn)*4.5) + (int(i/8)+1)*i_turn;
 }
@@ -34,6 +33,8 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 	int indices[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	convert_binary( pawns, indices );
 
+	int off7 = 0 + 7*(1-i_turn)/2, off9 = 7 + 7*(i_turn-1)/2;
+
 	int i = 0, index_update, pawn_rank, pawn_col;
 	while( indices[i] != -1 ) {
 		if( (not_pinned >> indices[i]) & 1 ) {
@@ -54,9 +55,10 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 				}
 			}
 
-			if( pawn_col != 0 ) {
+			if( pawn_col != off7 ) {
 				index_update = indices[i] +  7*i_turn; // Capturable left
 				if( (their_pieces >> index_update) & 1 ) {
+//cout << " Pawn takes left " << endl;
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = pawn;
@@ -81,7 +83,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 				}
 			}
 
-			if( pawn_col != 7 ) {
+			if( pawn_col != off9 ) {
 				index_update = indices[i] +  9*i_turn; // Capturable right
 				if( (their_pieces >> index_update) & 1 ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
@@ -139,7 +141,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 
 	return n_moves;
 }
-//*/
 
 inline int knight_moves( Moves *moves_add, uint64_t knights, uint64_t their_pieces, uint64_t not_all_pieces, uint64_t not_pinned ) {
 	int n_moves = 0;

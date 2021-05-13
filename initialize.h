@@ -22,7 +22,7 @@ inline Moves_temp* newTemp( int n_moves ) {
 inline  Move_Tree* newTree( Moves *moves_add, int new_moves ) {
 	Move_Tree* newtree = new Move_Tree;
 	newtree->n_moves = new_moves;
-	//newtree->moves_arr = newMoves( param_bits, new_moves );
+	newtree->moves_arr = new Moves[new_moves];
 	newtree->moves_arr = moves_add;
 	for( int n = 0; n < new_moves; n++ ) {
 		newtree->moves_arr[n].children = nullptr;
