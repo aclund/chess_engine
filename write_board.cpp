@@ -50,7 +50,7 @@ void squares( int board_in[64], int row ) {
 	return;
 }
 
-void write_board( int board_in[64], int params_in[n_params] ) {
+void write_board( int board_in[64], int *params_in ) {
 
 	cout << "\n";
 	cout << "   A   B   C   D   E   F   G   H\n";

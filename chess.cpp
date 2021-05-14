@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -9,12 +10,15 @@ using namespace std;
 #include "piece_moves.h"
 #include "check_check.h"
 
+int ierr;
+int n_params = 6;
+int  *params = new int[n_params];
+
 void is_over(Chess_Board);
 
 int main(int argc, char *argv[]) {
 
-	int ierr;
-	params = new int[n_params];
+	params[0] = 0;
 
 	bool read_fen = false;
 	bool random = false;

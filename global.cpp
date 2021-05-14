@@ -51,4 +51,4 @@ int board[64] = { w_rook, w_knight, w_bishop, w_queen, w_king, w_bishop, w_knigh
 		  b_pawn, b_pawn,   b_pawn,   b_pawn,  b_pawn, b_pawn,   b_pawn,   b_pawn,
 		  b_rook, b_knight, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook };
 
-int n_params=6, *params;
+//int n_params=6, *params;

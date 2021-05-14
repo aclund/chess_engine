@@ -15,6 +15,7 @@ void generator( Chess_Board chess_board, Move_Tree *head, int depth ) {
 //cout <<" Turn = "; print_binary( head->moves_arr[0].parameters & 1 ); cout << endl;
 
 	Chess_Board chess_moved;
+	Moves *moves_add;
 
 	int n_possible_moves, ierr;
 	for( int n = 0; n < head->n_moves; n++ ) {
@@ -25,7 +26,7 @@ void generator( Chess_Board chess_board, Move_Tree *head, int depth ) {
 //cout <<"  ";
 //print_binary(chess_moved.Parameters);cout<<endl;
 
-		Moves *moves_add = newMoves( chess_moved.Parameters, max_moves );
+		moves_add = newMoves( chess_moved.Parameters, max_moves );
 		n_possible_moves = 0;
 		all_moves( chess_moved, moves_add, &n_possible_moves );
 //print_binary( moves_add[n].bitmove ); cout<<endl<<endl;

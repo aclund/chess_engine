@@ -44,6 +44,7 @@ void engine( ) {
 	cout << " Total Moves = " << total_moves << endl;
 
 	freeTree( root );
+	free( moves_add );
 
 	return;
 }

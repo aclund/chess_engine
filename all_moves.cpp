@@ -76,10 +76,11 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 			n_moves++;
 		}
 	}
+	free( moves_all );
 
 	check_check( your_pieces->King, your_pieces->All, their_pieces, 
 		     ~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
-	if( n_checks != 0 ) { *n_possible_moves = n_moves; return; }
+	if( n_checks != 0 ) { *n_possible_moves = n_moves; free( check_pieces ); return; }
 	// CAN Castle
 	int bit_offset = 0;
 	int index_king = 4;
@@ -152,5 +153,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	}
 */
 	*n_possible_moves = n_moves;
+	free( castle_through );
+	free( check_pieces );
 	return;
 }

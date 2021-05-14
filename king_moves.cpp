@@ -72,6 +72,7 @@ int king_moves  ( Moves *moves_add, uint64_t Sr_king, uint64_t your_pieces, Piec
 			}
 		}
 	}
+	free( check_pieces );
 	return spot;
 }
 
