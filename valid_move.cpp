@@ -128,8 +128,16 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 
 	//Promote
 	bool promote = false;
+	int promote_piece;
 	if( move_AN.find('=') != string::npos ) {
 		promote = true;
+		read = move_AN[move_AN.find('=')+1];
+		if( string_move_piece.find(read) == string::npos ) {
+			cout << " CANNOT convert inputed promotion!\n";
+			return 1;
+		}
+		promote_piece = -1*piece_convert(read);
+	cout << promote_piece << endl;
 	}
 
 	// Convert user input to move
@@ -138,7 +146,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 				read = move_AN[n_read];
 				if(  string_move_piece.find(read) != string::npos &&
 						move_AN.length() != 2 && !found_piece ) {
-						move_piece = i_turn*piece_convert(read);
+						move_piece = piece_convert(read);
 						found_piece = true;
 				}
 				else if( move_letter_square.find(read) != string::npos ) {
@@ -150,7 +158,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 						numbers++;
 				}
 		}
-		if( !found_piece ) { move_piece = i_turn*pawn; }
+		if( !found_piece ) { move_piece = pawn; }
 		if( numbers != 1 ) { cout << "ONE row number only!!!\n"; return 1; }
 		if( letters  < 1 ) { cout << "NO square letter?\n"; return 1; }
 		// b is a duplicate and semi handled
@@ -162,6 +170,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 						}
 				}
 		}
+		if( promote ) { move_piece = promote_piece; }
 
 		// Find and check target square
 		index_square(move_square, &move_row, &move_column); 
@@ -184,13 +193,13 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 	//print_moves( moves_add, n_possible_moves, your_pieces->All );
 
 	for( int n = 0; n < n_possible_moves; n++ ) {
-		if( moves_add[n].piece*i_turn == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 10) ) {
+		if( moves_add[n].piece == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 10) ) {
 			int indices[3] = {-1,-1,-1};
 			convert_binary( moves_add[n].bitmove, indices );
 			int i = 0;
 			while( indices[i] != -1 ) {
 				if( indices[i] == move_index ) {
-cout << "Making Move...\n";
+//cout << "Making Move...\n";
 					bitboards = preform_move( bitboards, moves_add[n] );
 					
 					free( moves_add );

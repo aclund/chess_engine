@@ -12,6 +12,7 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
 
         for( int n = 0; n < n_moves; n++ ) {
                 cout << " " << n+1 << ":  ";
+		index = -1;
                 if( moves_print[n].piece != 0 ) {
                         convert_binary( (moves_print[n].bitmove & ~your_pieces), &index );
                 }
@@ -73,7 +74,7 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                         cout << " CAPTURE\n";
                 } else{ cout << "\n"; }
 
-                //print_binary(moves_print[n].bitmove); cout << endl;
+		//print_binary(moves_print[n].bitmove); cout << endl;
         }
         return;
 }

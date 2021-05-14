@@ -79,6 +79,9 @@ void is_over( Chess_Board chess_board ) {
           break;
 	}
 
+	convert2board();
+	write_board(board,params);
+
 	int n_checks = 0;
 	Moves_temp *check_pieces = newTemp(2);
 	check_check( your_pieces->King, your_pieces->All, their_pieces, 

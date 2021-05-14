@@ -1,4 +1,3 @@
-
 inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 
 	Chess_Board chess_next = chess_current;
@@ -29,7 +28,8 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	curr_pieces->All ^= preform.bitmove;
 	chess_next.All_Pieces ^= preform.bitmove;
 
-	if( preform.capture ) {
+	if( (preform.bitmove & other_pieces->All) != 0 or (preform.piece == 10) ) {
+	//if( preform.capture ) {
 		if( preform.piece == 10 ) {
 			temp  = preform.bitmove;
 			temp &= ~curr_pieces->Pawns;
@@ -140,26 +140,26 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	  case -2:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
+		curr_pieces->Knights |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
-		curr_pieces->Knights &=  temp; 
 	  break;
 	  case -3:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
+		curr_pieces->Bishops |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
-		curr_pieces->Bishops &=  temp; 
 	  break;
 	  case -4:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
+		curr_pieces->Rooks   |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
-		curr_pieces->Rooks   &=  temp; 
 	  break;
 	  case -5:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
+		curr_pieces->Queens  |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
-		curr_pieces->Queens  &=  temp; 
 	  break;
 
 	  default:

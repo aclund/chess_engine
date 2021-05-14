@@ -24,6 +24,14 @@ int king_moves  ( Moves *moves_add, uint64_t Sr_king, uint64_t your_pieces, Piec
 	for( int n_direction = 0; n_direction < 8; n_direction++ ) {
 		index_update = index_curr + index_directions[n_direction];
 		if( count_to_edge[index_curr][n_direction] != 0 ) {
+			if( !((your_pieces >> index_update) & 1) ) {
+				moves_add[spot].bitmove = BIT_SET(moves_add[spot].bitmove,index_update);
+				moves_add[spot].bitmove = BIT_SET(moves_add[spot].bitmove,index_curr);
+				moves_add[spot].piece   = king;
+				BIT_CLEAR( moves_add[spot].parameters, 1 + bit_offset );
+				BIT_CLEAR( moves_add[spot].parameters, 2 + bit_offset );
+				spot++;
+/*
 			if( (not_all_pieces >> index_update) & 1 ) {			     // Empty
 				Sr_peak = 0;
 				BIT_SET( Sr_peak, index_update );
@@ -52,7 +60,7 @@ int king_moves  ( Moves *moves_add, uint64_t Sr_king, uint64_t your_pieces, Piec
 				check_check( Sr_peak, your_pieces, temp, not_all_pieces, i_turn, 
 					     check_pieces, &n_checks );
 				if( n_checks == 0 ) {
-cout << " K @:" << index_curr << " heading to absolutely demolish @:" << index_update<<endl;
+//cout << " K @:" << index_curr << " heading to absolutely demolish @:" << index_update<<endl;
 					moves_add[spot].bitmove = BIT_SET(moves_add[spot].bitmove,index_update);
 					moves_add[spot].bitmove = BIT_SET(moves_add[spot].bitmove,index_curr);
 					moves_add[spot].piece   = king;
@@ -60,6 +68,7 @@ cout << " K @:" << index_curr << " heading to absolutely demolish @:" << index_u
 					BIT_CLEAR( moves_add[spot].parameters, 2 + bit_offset );
 					spot++;
 				}
+*/
 			}
 		}
 	}

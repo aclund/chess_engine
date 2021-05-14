@@ -68,6 +68,9 @@ int convert_fen() {
 		//cout << "\n";
 	}
 
+	for( int i = 0; i < n_params; i++ ) {
+		params[i] = 0;
+	}
 
 	ifen = FEN[end+1];
 	if( ifen == 'w' ) { params[0] =  1; }

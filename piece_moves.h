@@ -69,7 +69,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 						n_moves += 3;
 					}
 				}
-			   	else if( t_en_passant == index_update ) {
+			   	else if( t_en_passant != 0 and t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
@@ -96,7 +96,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 						n_moves += 3;
 					}
 				}
-			   	else if( t_en_passant == index_update ) {
+			   	else if( t_en_passant != 0 and t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
