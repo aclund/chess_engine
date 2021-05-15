@@ -62,5 +62,7 @@ void set_bitboards() {
 	BIT_SET(bitboards.Parameters,4); // q
 	// Turn, En Passant, # move 0
 
+	convert2board();
+
 	return;
 }

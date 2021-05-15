@@ -18,8 +18,6 @@ void is_over(Chess_Board);
 
 int main(int argc, char *argv[]) {
 
-	params[0] = 0;
-
 	bool read_fen = false;
 	bool random = false;
 	bool run    = true;
@@ -29,36 +27,36 @@ int main(int argc, char *argv[]) {
 		if( strcmp(argv[i], " -off") == 0 ) { run = false; }
 		if( strcmp(argv[i], "--off") == 0 ) { run = false; }
 	}
-	if( read_fen ) { ierr = convert_fen(); }
+	if( read_fen ) { ierr = convert_fen( ); }
 	else{ set_bitboards( ); }
 	if( ierr != 0 ) { return 0; }
 
-	if( run or random ) { ask_user(run); }
+	if( run or random ) { ask_user( run ); }
 
-	set_moves();
+	set_moves( );
 
 	while( true ) {
 		ierr = check_bits( bitboards );
 		if( ierr != 0 ) { break; }
-		convert2board();
-		write_board(board,params);
+		convert2board( );
+		write_board( board, params );
 		if( params[0] == user_turn ) {
-			move();
+			move( );
 		}
 		else {
 			if( random ) {
-				random_player();
+				random_player( );
 			}
 			else if( run ) {
-				engine();
-				break;
+				engine( );
+				//break;
 			}
 			else {
-				move();
+				move( );
 			}
 		}
 
-		if( game_over(bitboards) ) { is_over(bitboards); break; }
+		if( game_over( bitboards ) ) { is_over( bitboards ); break; }
 
 	}
 
@@ -83,8 +81,8 @@ void is_over( Chess_Board chess_board ) {
           break;
 	}
 
-	convert2board();
-	write_board(board,params);
+	convert2board( );
+	write_board( board, params );
 
 	int n_checks = 0;
 	Moves_temp *check_pieces = newTemp(2);

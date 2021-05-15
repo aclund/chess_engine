@@ -58,12 +58,10 @@ void write_board( int board_in[64], int *params_in ) {
 
 	int row;
         for( int i = 0; i < 8; i++ ) {
-/*
 		if(      user_turn == -1 ) { row = i + 1; }
 		else if( user_turn ==  1 ) { row = 8 - i; }
 		else{ cout << " ERROR in write_board_in\n"; }
-*/
-row = 8 - i;
+//row = 8 - i;
 		cout << row << "|";
                 squares(board_in, row-1);
 		if( i != 7 ) {

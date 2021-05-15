@@ -10,16 +10,24 @@ void ask_user( bool engine ) {
 
 	bool found;
 
-	cout << "_____________________________________________________\n\n";
-	cout << "  Welcome to SHIT Chess \n\n";
-	cout << "  The only chess program worse than you!\n";
-	cout << "  I would wish you luck but the rules are faulty SO\n";
+	cout << "\n WARNING: Engine does NOT calculate board scores!\n\n";
+
+	cout << "_____________________________________________________________________\n";
+	cout << "   __________                  __________   __________    __________ \n";
+	cout << "  |             |          |  |            |             |           \n";
+	cout << "  |             |          |  |            |             |           \n";
+	cout << "  |             |          |  |            |             |           \n";
+	cout << "  |             |----------|  |----------   ----------    ---------- \n";
+	cout << "  |             |          |  |                       |             |\n";
+	cout << "  |             |          |  |                       |             |\n";
+	cout << "  |__________   |          |  |__________   __________|   __________|\n";
+	cout << "_____________________________________________________________________\n\n";
 
 
 	// COLOR
 	string color;
 	found = false;
-found = true; user_turn = -1*params[0];
+//found = true; user_turn = -1*params[0];
 	while( found == false ) {
 		cout << " Pick a Color to Play (w/b)\n";
 		cin >> color;
@@ -38,7 +46,7 @@ found = true; user_turn = -1*params[0];
 		while( found == false ) {
 			cout << " Ender Maximum Search Depth\n";
 			cin >> max_depth;
-			if( max_depth >= 0 && max_depth < 11 ) { found = true; }
+			if( max_depth > 0 && max_depth < 11 ) { found = true; }
 			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }
 			else { cout << " ERROR\n"; }
 		}
