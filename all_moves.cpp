@@ -36,6 +36,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
                 }
                 bit2 /= 2;
         }
+	if( t_en_passant == 0 ) { t_en_passant = -1; }
 	//cout << t_en_passant << " t_en_passant\n";
 
 	uint64_t not_all_pieces = ~chess_board.All_Pieces;
@@ -43,11 +44,8 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	uint64_t null_pinned = 0;
 	int n_moves_all = 0;
 	Moves *moves_all = newMoves( chess_board.Parameters, max_moves );
-	n_moves_all += piecey_pie_moves( &moves_all[n_moves_all], your_pieces, their_pieces->All,
-					 not_all_pieces, ~null_pinned, t_en_passant, i_turn );
-	n_moves_all += king_moves  ( &moves_all[n_moves_all], your_pieces->King, your_pieces->All, their_pieces, 
-				 not_all_pieces, i_turn );
-	//cout << " +King   Moves = " << n_moves << endl;
+	n_moves_all = piecey_pie_moves( &moves_all[n_moves_all], your_pieces, their_pieces->All,
+				 	not_all_pieces, ~null_pinned, t_en_passant, i_turn );
 
 //print_moves( moves_all, n_moves_all, your_pieces->All );
 

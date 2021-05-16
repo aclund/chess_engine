@@ -41,8 +41,8 @@ int in_check( Moves *moves_add, Chess_Board chess_board, Moves_temp bad_boy, uin
 
 	// Can move king out of check
 	Moves *moves_around = newMoves( chess_board.Parameters, max_moves );
-	int n_king_moves = king_moves( moves_around, your_pieces->King, your_pieces->All, their_pieces, 
-				       ~chess_board.All_Pieces, i_turn );
+	int n_king_moves = king_moves( moves_around, your_pieces->King, your_pieces->All, their_pieces->All, 
+				       ~chess_board.All_Pieces, ~pinned, i_turn );
 cout << " n_king_moves " << n_king_moves << endl;
 	uint64_t squirrel_that_king;
 	Moves_temp *check_pieces = newTemp(2);

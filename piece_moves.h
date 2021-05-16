@@ -69,7 +69,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 						n_moves += 3;
 					}
 				}
-			   	else if( t_en_passant != 0 and t_en_passant == index_update ) {
+			   	else if( t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
@@ -96,7 +96,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 						n_moves += 3;
 					}
 				}
-			   	else if( t_en_passant != 0 and t_en_passant == index_update ) {
+			   	else if( t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
@@ -300,6 +300,33 @@ inline int queen_moves ( Moves *moves_add, uint64_t queens,  uint64_t their_piec
 	return n_moves;
 }
 
+inline int king_moves  ( Moves *moves_add, uint64_t Sr_king, uint64_t your_pieces, uint64_t their_pieces, uint64_t not_all_pieces,
+			 uint64_t not_pinned, int i_turn ) {
+        int n_moves = 0;
+
+        int index_curr = -1;
+        convert_binary( Sr_king, &index_curr );
+
+        int bit_offset = 0;
+        if( i_turn == -1 ) { bit_offset = 2; }
+
+        int n_checks, index_update;
+        for( int n_direction = 0; n_direction < 8; n_direction++ ) {
+                index_update = index_curr + index_directions[n_direction];
+                if( count_to_edge[index_curr][n_direction] != 0 ) {
+                        if( !((your_pieces >> index_update) & 1) ) {
+                                moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
+                                moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_curr);
+                                moves_add[n_moves].piece   = king;
+                                BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );
+                                BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );
+                                n_moves++;
+			}
+		}
+	}
+	return n_moves;
+}
+
 inline int piecey_pie_moves( Moves *moves_add, Pieces *your_pieces, uint64_t their_pieces, uint64_t not_all_pieces, uint64_t not_pinned,
 			     int t_en_passant, int i_turn ) {
 
@@ -315,6 +342,8 @@ inline int piecey_pie_moves( Moves *moves_add, Pieces *your_pieces, uint64_t the
 				 not_all_pieces, not_pinned, i_turn );
         n_moves += queen_moves ( &moves_add[n_moves], your_pieces->Queens,  their_pieces,
 	     			 not_all_pieces, not_pinned );
+        n_moves += king_moves  ( &moves_add[n_moves], your_pieces->King, your_pieces->All, their_pieces,
+	     			 not_all_pieces, not_pinned, i_turn );
 
 	return n_moves;
 }

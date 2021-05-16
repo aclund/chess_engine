@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
 	if( ierr != 0 ) { return 0; }
 
 	if( run or random ) { ask_user( run ); }
+	else { user_turn = 1; }
 
 	set_moves( );
 

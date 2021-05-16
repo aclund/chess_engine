@@ -11,7 +11,7 @@ void set_bitboards();
 void set_moves();
 void all_moves(Chess_Board,Moves*,int*);
 int in_check(Moves*,Chess_Board,Moves_temp,uint64_t,int);
-int king_moves(Moves*,uint64_t,uint64_t,Pieces*,uint64_t,int);
+//int king_moves(Moves*,uint64_t,uint64_t,Pieces*,uint64_t,int);
 //void check_check(uint64_t,uint64_t,Pieces*,uint64_t,uint64_t*,int*);
 void random_player();
 void engine();
