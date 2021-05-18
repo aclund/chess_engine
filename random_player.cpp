@@ -13,25 +13,27 @@ using namespace std;
 
 void random_player() {
 
-        //Move_Tree *root = nullptr;
-        Move_Tree *root;
+        Move_Tree *root = new Move_Tree;
 
         //Find Depth 0
-        Moves *moves_add = newMoves( bitboards.Parameters, max_moves );
+        root->moves_arr = newMoves( bitboards.Parameters, max_moves );
         int n_possible_moves = 0;
-        all_moves( bitboards, moves_add, &n_possible_moves );
+        all_moves( bitboards, root->moves_arr, &n_possible_moves );
+	root->n_moves = n_possible_moves;
 
-        root = newTree( moves_add, n_possible_moves );
 	cout << "# Possible Moves = " << n_possible_moves << "\n";
 	if( n_possible_moves == 0 ) { return; }
 
 	int ierr = check_bits( bitboards );
 	if( ierr != 0 ) { return; }
 
-	//srand (time(NULL));
+	srand (time(NULL));
 	int rando_board = rand() % n_possible_moves;
 
-	bitboards = preform_move( bitboards, moves_add[rando_board] );
+	bitboards = preform_move( bitboards, root->moves_arr[rando_board] );
+
+	free( root->moves_arr );
+	free( root );
 
 	return;
 }

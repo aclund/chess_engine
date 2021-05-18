@@ -70,9 +70,7 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                   break;
                 }
                 cout << index;
-                if( moves_print[n].capture ) {
-                        cout << " CAPTURE\n";
-                } else{ cout << "\n"; }
+                cout << "\n";
 
 		//print_binary(moves_print[n].bitmove); cout << endl;
         }

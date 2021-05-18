@@ -41,7 +41,6 @@ struct Moves_s {
 	uint64_t bitmove;
 	uint16_t parameters;
 	int piece;
-	bool capture;
 };
 struct Move_Tree_s {
 	int n_moves;

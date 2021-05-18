@@ -137,7 +137,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			return 1;
 		}
 		promote_piece = -1*piece_convert(read);
-	cout << promote_piece << endl;
+		//cout << promote_piece << endl;
 	}
 
 	// Convert user input to move
@@ -150,11 +150,11 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 						found_piece = true;
 				}
 				else if( move_letter_square.find(read) != string::npos ) {
-						move_square[0] = read;
+						move_square.insert( 0, &read );
 						letters++;
 				}
 				else if( move_number_square.find(read) != string::npos ) {
-						move_square[1] = read;
+						move_square.insert( 1, &read );
 						numbers++;
 				}
 		}

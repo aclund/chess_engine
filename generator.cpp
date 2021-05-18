@@ -10,28 +10,23 @@ using namespace std;
 void generator( Chess_Board chess_board, Move_Tree *head, int depth ) {
 
 	if( depth == 0 or game_over(chess_board) ) { return; }
-	//if( depth == 0 ) { return; }
-//cout << " Depth : " << max_depth - depth + 1;
-//cout <<" Turn = "; print_binary( head->moves_arr[0].parameters & 1 ); cout << endl;
 
 	Chess_Board chess_moved;
-	Moves *moves_add;
 
 	int n_possible_moves, ierr;
 	for( int n = 0; n < head->n_moves; n++ ) {
 		chess_moved = preform_move( chess_board, head->moves_arr[n] );
 
-		ierr = check_bits( chess_moved );
-		if( ierr != 0 ) { break; }
-//cout <<"  ";
-//print_binary(chess_moved.Parameters);cout<<endl;
+		//ierr = check_bits( chess_moved );
+		//if( ierr != 0 ) { break; }
 
-		moves_add = newMoves( chess_moved.Parameters, max_moves );
-		n_possible_moves = 0;
-		all_moves( chess_moved, moves_add, &n_possible_moves );
-//print_binary( moves_add[n].bitmove ); cout<<endl<<endl;
+		Move_Tree *curr = new Move_Tree;
+		*curr = (Move_Tree){ 0 };
+		curr->moves_arr = newMoves( chess_moved.Parameters, max_moves );
 
-		Move_Tree *curr = newTree( moves_add, n_possible_moves );
+		all_moves( chess_moved, curr->moves_arr, &n_possible_moves );
+
+		curr->n_moves = n_possible_moves;
 		head->moves_arr[n].children = curr;
 
 		generator( chess_moved, curr, depth-1);

@@ -19,11 +19,6 @@ inline void add_promotes( Moves *moves_promote ) {
 	moves_promote[n].bitmove = moves_promote[n-1].bitmove;
 	moves_promote[n].piece   = -1*knight;
 	n++;
-	if( moves_promote[n-4].capture ) {
-		moves_promote[n-1].capture = true;
-		moves_promote[n-2].capture = true;
-		moves_promote[n-3].capture = true;
-	}
 }
 
 inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_pieces, uint64_t not_all_pieces, uint64_t not_pinned,
@@ -62,7 +57,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = pawn;
-					moves_add[n_moves].capture = true;
 					n_moves++;
 					if( pawn_rank == 7 ) { // Promote
 						add_promotes( &moves_add[n_moves-1] );
@@ -73,7 +67,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
-					moves_add[n_moves].capture = true;
 //cout << en_passant << "SET take en passant " << t_en_passant << endl;
 					n_moves++;
 					if( pawn_rank == 7 ) { // Promote
@@ -89,7 +82,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = pawn;
-					moves_add[n_moves].capture = true;
 					n_moves++;
 					if( pawn_rank == 7 ) { // Promote
 						add_promotes( &moves_add[n_moves-1] );
@@ -100,7 +92,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece   = en_passant;
-					moves_add[n_moves].capture = true;
 //cout << en_passant << "SET take en passant " << t_en_passant << endl;
 //cout << i_turn << " turn " << index_update <<endl;
 					n_moves++;
@@ -162,7 +153,6 @@ inline int knight_moves( Moves *moves_add, uint64_t knights, uint64_t their_piec
 					moves_add[n_moves].bitmove = knight_squares[indices[i]][n] & their_pieces;
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					moves_add[n_moves].piece   = knight;
-					moves_add[n_moves].capture = true;
 					n_moves++;
 				}
 			}
@@ -197,7 +187,6 @@ inline int bishop_moves( Moves *moves_add, uint64_t bishops, uint64_t their_piec
 						moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 						moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 						moves_add[n_moves].piece   = bishop;
-						moves_add[n_moves].capture = true;
 						n_moves++;
                                     		n_count = 7;
                                 	}
@@ -249,7 +238,6 @@ inline int rook_moves  ( Moves *moves_add, uint64_t rooks,   uint64_t their_piec
 						moves_add[n_moves].piece   = rook;
 						if(      rm_k_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 1+bit_offset ); }
 						else if( rm_q_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 2+bit_offset ); }
-						moves_add[n_moves].capture = true;
 						n_moves++;
                                         	n_count = 7;
                                 	}
@@ -287,7 +275,6 @@ inline int queen_moves ( Moves *moves_add, uint64_t queens,  uint64_t their_piec
 						moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 						moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 						moves_add[n_moves].piece   = queen;
-						moves_add[n_moves].capture = true;
 						n_moves++;
                                         	n_count = 7;
                                 	}
