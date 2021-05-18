@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
 		write_board( board, params );
 		if( params[0] == user_turn ) {
 			move( );
+			//random_player( );
 		}
 		else {
 			if( random ) {
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
 
 	}
 
-	free( params );
+	delete[] params;
 
 	return 0;
 }
@@ -86,9 +87,10 @@ void is_over( Chess_Board chess_board ) {
 	write_board( board, params );
 
 	int n_checks = 0;
-	Moves_temp *check_pieces = newTemp(2);
+	//Moves_temp *check_pieces = newTemp(2);
 	check_check( your_pieces->King, your_pieces->All, their_pieces, 
-		     ~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
+		     ~chess_board.All_Pieces, i_turn, &n_checks );
+		     //~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
 
 	if( n_checks == 0 ) {
 		cout << " STALEMATE! \n";
@@ -96,4 +98,6 @@ void is_over( Chess_Board chess_board ) {
 	else {
 		cout << " CHECKMATE! \n";
 	}
+
+	//delete[] check_pieces;
 }

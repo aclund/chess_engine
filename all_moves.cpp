@@ -49,7 +49,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 
 //print_moves( moves_all, n_moves_all, your_pieces->All );
 
-	Moves_temp *check_pieces = newTemp(2);
+	//Moves_temp *check_pieces = newTemp(2);
 	Chess_Board chess_moved;
 	Pieces *s_your_pieces, *s_their_pieces;
 	switch( chess_board.Parameters & 1 ) {
@@ -67,18 +67,20 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	for( int n = 0; n < n_moves_all; n++ ) {
 		chess_moved = preform_move( chess_board, moves_all[n] );
 		check_check( s_your_pieces->King, s_your_pieces->All, s_their_pieces, 
-			     ~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
+			     ~chess_moved.All_Pieces, i_turn, &n_checks );
+			     //~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
 //cout << " # checks = " << n_checks << " move piece " << moves_all[n].piece << endl;
 		if( n_checks == 0 ) {
 			moves_add[n_moves] = moves_all[n];
 			n_moves++;
 		}
 	}
-	free( moves_all );
+	delete[] moves_all;
 
 	check_check( your_pieces->King, your_pieces->All, their_pieces, 
-		     ~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
-	if( n_checks != 0 ) { *n_possible_moves = n_moves; free( check_pieces ); return; }
+		     ~chess_board.All_Pieces, i_turn, &n_checks );
+		     //~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
+	if( n_checks != 0 ) { *n_possible_moves = n_moves; /*delete[] check_pieces;*/ return; }
 	// CAN Castle
 	int bit_offset = 0;
 	int index_king = 4;
@@ -98,13 +100,15 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 		BIT_SET( castle_through[0].bitmove, index_king+1 );
 		chess_moved = preform_move( chess_board, castle_through[0] );
 		check_check( s_your_pieces->King, s_your_pieces->All, s_their_pieces, 
-			     ~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
+			     ~chess_moved.All_Pieces, i_turn, &n_checks );
+			     //~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
 		if( n_checks == 0 ) {
 			castle_through[0].bitmove = your_pieces->King;
 			BIT_SET( castle_through[0].bitmove, index_king+2 );
 			chess_moved = preform_move( chess_board, castle_through[0] );
 			check_check( s_your_pieces->King, s_your_pieces->All, s_their_pieces, 
-				     ~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
+				     ~chess_moved.All_Pieces, i_turn, &n_checks );
+				     //~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
 			if( n_checks == 0 ) {
 		//cout << i_turn << " CAN Castle King\n";
 				BIT_SET( moves_add[n_moves].bitmove, index_king   );
@@ -124,13 +128,15 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 		BIT_SET( castle_through[0].bitmove, index_king-1 );
 		chess_moved = preform_move( chess_board, castle_through[0] );
 		check_check( s_your_pieces->King, s_your_pieces->All, s_their_pieces, 
-			     ~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
+			     ~chess_moved.All_Pieces, i_turn, &n_checks );
+			     //~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
 		if( n_checks == 0 ) {
 			castle_through[0].bitmove = your_pieces->King;
 			BIT_SET( castle_through[0].bitmove, index_king-2 );
 			chess_moved = preform_move( chess_board, castle_through[0] );
 			check_check( s_your_pieces->King, s_your_pieces->All, s_their_pieces, 
-				     ~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
+				     ~chess_moved.All_Pieces, i_turn, &n_checks );
+				     //~chess_moved.All_Pieces, i_turn, check_pieces, &n_checks );
 			if( n_checks == 0 ) {
 		//cout << i_turn << " CAN Castle Queen\n";
 				BIT_SET( moves_add[n_moves].bitmove, index_king   );
@@ -151,7 +157,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	}
 */
 	*n_possible_moves = n_moves;
-	free( castle_through );
-	free( check_pieces );
+	delete[] castle_through;
+	//delete[] check_pieces;
 	return;
 }

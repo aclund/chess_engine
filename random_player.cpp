@@ -32,8 +32,8 @@ void random_player() {
 
 	bitboards = preform_move( bitboards, root->moves_arr[rando_board] );
 
-	free( root->moves_arr );
-	free( root );
+	delete[] root->moves_arr;
+	delete   root;
 
 	return;
 }

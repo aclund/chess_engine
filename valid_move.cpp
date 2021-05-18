@@ -64,7 +64,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 
 	// If castle
 	uint64_t king_spot = 0;
-	Moves_temp *check_pieces = newTemp(2);
+	//Moves_temp *check_pieces = newTemp(2);
 	int n_checks;
 	if( move_AN.find('o') != string::npos ) {
 		*moves_found = -1;
@@ -91,7 +91,8 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			for( int index = 0; index < 3; index++ ) {
 				BIT_SET( king_spot, index_s+index );
 				check_check( king_spot, your_pieces->All, their_pieces, 
-					     ~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
+					     ~bitboards.All_Pieces, i_turn, &n_checks );
+					     //~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
 				if( n_checks != 0 ) {
 					cout << " Castling through check!\n";
 					return 1;
@@ -110,7 +111,8 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			for( int index = 0; index < 3; index++ ) {
 				BIT_SET( king_spot, index_s-index );
 				check_check( king_spot, your_pieces->All, their_pieces, 
-					     ~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
+					     ~bitboards.All_Pieces, i_turn, &n_checks );
+					     //~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
 				if( n_checks != 0 ) {
 					cout << " Castling through check!\n";
 					return 1;
@@ -125,6 +127,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			return 1;
 		}
 	}
+	//delete[] check_pieces;
 
 	//Promote
 	bool promote = false;
@@ -202,7 +205,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 //cout << "Making Move...\n";
 					bitboards = preform_move( bitboards, moves_add[n] );
 					
-					free( moves_add );
+					delete[] moves_add;
 					return 0;
 				}
 				i++;
@@ -210,7 +213,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 		}
 	}	
 
-	free( moves_add );
+	delete[] moves_add;
 
 	// Move not found!
 	return 1;

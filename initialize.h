@@ -28,7 +28,7 @@ inline void freeTree( Move_Tree *head ) {
 			freeTree( head->moves_arr[n].children );
 		}
 	}
-	free( head->moves_arr );
-	free( head );
+	delete[] head->moves_arr;
+	delete   head;
 	return;
 }

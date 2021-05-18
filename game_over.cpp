@@ -14,7 +14,7 @@ bool game_over( Chess_Board chess_board ) {
 	int n_possible_moves = 0;
 	Moves *moves_null = newMoves( chess_board.Parameters, max_moves );
 	all_moves( chess_board, moves_null, &n_possible_moves );
-	free( moves_null );
+	delete[] moves_null;
 
 	if( n_possible_moves == 0 ) {
 		return true;

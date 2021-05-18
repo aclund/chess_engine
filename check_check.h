@@ -1,6 +1,7 @@
 
 inline void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces, uint64_t not_all_pieces,
-			 int i_turn, Moves_temp *bad_boys, int *n_checks ) {
+			 //int i_turn, Moves_temp *bad_boys, int *n_checks ) {
+			 int i_turn, int *n_checks ) {
 
 	uint16_t param_bits = 0;
 	Moves *moves_check = newMoves( param_bits, max_moves);
@@ -31,14 +32,14 @@ inline void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their
 	for( int n = 0; n < n_moves_null; n++ ) {
 		if( (your_king & moves_check[n].bitmove) != 0 ) {
 	//cout << moves_check[n].piece << " is trying to merk you"<<endl;
-			bad_boys[n_count].bitmove  = moves_check[n].bitmove;
-			bad_boys[n_count].bitmove ^= your_king;
-			bad_boys[n_count].piece    = moves_check[n].piece;
+			//bad_boys[n_count].bitmove  = moves_check[n].bitmove;
+			//bad_boys[n_count].bitmove ^= your_king;
+			//bad_boys[n_count].piece    = moves_check[n].piece;
 			n_count++;
 			if(  moves_check[n].piece < 0 ) { n+=3; }
 		}
 	}
-	free( moves_check );
+	delete[] moves_check;
 
 	*n_checks = n_count;
 
