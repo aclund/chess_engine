@@ -1,4 +1,4 @@
-inline Moves* newMoves( uint16_t param_bits, int n_moves ) {
+inline Moves* newMoves( uint32_t param_bits, int n_moves ) {
 	Moves* moves_create = new Moves[n_moves];
 	for( int i = 0; i < n_moves; i++ ) {
 		moves_create[i].bitmove =  0;
@@ -6,8 +6,9 @@ inline Moves* newMoves( uint16_t param_bits, int n_moves ) {
 		moves_create[i].children = NULL;
 
                 moves_create[i].parameters  = param_bits;
-                moves_create[i].parameters %= 32;
-                BIT_FLIP(moves_create[i].parameters,0);
+                moves_create[i].parameters %= 4096;       // Clear en passant
+                BIT_FLIP(moves_create[i].parameters,0);   // Turn flip
+                moves_create[i].parameters += 32;         // Half-Move Increment
 	}
 	return moves_create;
 }

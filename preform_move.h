@@ -1,3 +1,14 @@
+inline uint32_t clear_hbits( uint32_t param_bits ) {
+	BIT_CLEAR( param_bits, 5  );
+	BIT_CLEAR( param_bits, 6  );
+	BIT_CLEAR( param_bits, 7  );
+	BIT_CLEAR( param_bits, 8  );
+	BIT_CLEAR( param_bits, 9  );
+	BIT_CLEAR( param_bits, 10 );
+	BIT_CLEAR( param_bits, 11 );
+	return param_bits;
+}
+
 inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 
 	Chess_Board chess_next = chess_current;
@@ -29,6 +40,7 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	chess_next.All_Pieces ^= preform.bitmove;
 
 	if( (preform.bitmove & other_pieces->All) != 0 or (preform.piece == 10) ) {
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	//if( preform.capture ) {
 		if( preform.piece == 10 ) {
 			temp  = preform.bitmove;
@@ -121,6 +133,7 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	  case 1: // PAWN
 	  case 10:// EN PASSANT
 		curr_pieces->Pawns   ^=  preform.bitmove;
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
 	  case 2: // KNIGHT
 		curr_pieces->Knights ^=  preform.bitmove;
@@ -142,24 +155,28 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Knights |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
 	  case -3:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Bishops |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
 	  case -4:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Rooks   |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
 	  case -5:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Queens  |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
+		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
 
 	  default:

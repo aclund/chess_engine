@@ -29,12 +29,12 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	}
 	//cout << "i_turn =" << i_turn << endl;
 
-        int t_en_passant = 0, bit2 = 32;
-        for( int i = 5; i < 11; i++ ) {
+        int t_en_passant = 0, bit2 = 1;
+        for( int i = 12; i < 18; i++ ) {
                 if( (chess_board.Parameters >> i) & 1 ) {
                         t_en_passant += bit2;
                 }
-                bit2 /= 2;
+                bit2 *= 2;
         }
 	if( t_en_passant == 0 ) { t_en_passant = -1; }
 	//cout << t_en_passant << " t_en_passant\n";

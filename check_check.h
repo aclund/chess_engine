@@ -1,9 +1,8 @@
-
 inline void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces, uint64_t not_all_pieces,
 			 //int i_turn, Moves_temp *bad_boys, int *n_checks ) {
 			 int i_turn, int *n_checks ) {
 
-	uint16_t param_bits = 0;
+	uint32_t param_bits = 0;
 	Moves *moves_check = newMoves( param_bits, max_moves);
 
         //cout << moves_check[0].piece << " is trying to merk you"<<endl;print_binary(moves_check[0].bitmove);cout<<endl;
@@ -36,7 +35,7 @@ inline void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their
 			//bad_boys[n_count].bitmove ^= your_king;
 			//bad_boys[n_count].piece    = moves_check[n].piece;
 			n_count++;
-			if(  moves_check[n].piece < 0 ) { n+=3; }
+			//if(  moves_check[n].piece < 0 ) { n+=3; }
 		}
 	}
 	delete[] moves_check;

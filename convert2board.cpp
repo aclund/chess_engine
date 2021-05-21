@@ -25,12 +25,12 @@ void convert2board(){
 			params[i] = 1;
 		}
 	}
-	int t_en_passant = 0, bit2 = 32;
-	for( int i = 5; i < 11; i++ ) {
+	int t_en_passant = 0, bit2 = 1;
+	for( int i = 12; i < 18; i++ ) {
 		if( (bitboards.Parameters >> i) & 1 ) {
 			t_en_passant += bit2;
 		}
-		bit2 /= 2;
+		bit2 *= 2;
 	}
 	if( t_en_passant == 0 ) { params[5] = -1; }
 	else { params[5] = t_en_passant; }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <time.h>
 
 using namespace std;
 
@@ -17,6 +18,8 @@ int  *params = new int[n_params];
 void is_over(Chess_Board);
 
 int main(int argc, char *argv[]) {
+
+	clock_t whole = clock( );
 
 	bool read_fen = false;
 	bool random = false;
@@ -41,9 +44,8 @@ int main(int argc, char *argv[]) {
 		if( ierr != 0 ) { break; }
 		convert2board( );
 		write_board( board, params );
-		if( params[0] == user_turn ) {
+		if( params[0] == user_turn and !random ) {
 			move( );
-			//random_player( );
 		}
 		else {
 			if( random ) {
@@ -64,10 +66,22 @@ int main(int argc, char *argv[]) {
 
 	delete[] params;
 
+	cout << "\n TIME in CHESS: " << (clock( ) - whole) / (double) CLOCKS_PER_SEC << "\n\n";
+
 	return 0;
 }
 
 void is_over( Chess_Board chess_board ) {
+
+        uint32_t half_clock = chess_board.Parameters;
+        half_clock %= 4096;
+        BIT_CLEAR( half_clock, 0 );
+        BIT_CLEAR( half_clock, 1 );
+        BIT_CLEAR( half_clock, 2 );
+        BIT_CLEAR( half_clock, 3 );
+        BIT_CLEAR( half_clock, 4 );
+        if( half_clock >= 3200 ) { cout << "50 Move STALEMATE! \n"; return; }
+	
         int i_turn;
 	Pieces *your_pieces, *their_pieces;
         switch( chess_board.Parameters & 1 ) {
@@ -100,4 +114,5 @@ void is_over( Chess_Board chess_board ) {
 	}
 
 	//delete[] check_pieces;
+	return;
 }

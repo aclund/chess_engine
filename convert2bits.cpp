@@ -1,4 +1,5 @@
 #include <iostream>
+//using namespace std;
 
 #include "global.h"
 #include "convert_binary.h"
@@ -15,33 +16,15 @@ void convert2bits( ) {
 			BIT_SET( bitboards.Parameters, i );
 		}
 	}
-	int t_en_passant = params[5];
+	int t_en_passant = params[5], bit2 = 32;
 	if( t_en_passant != -1 ) {
-		if( int(t_en_passant/32) == 1 ) {
-			BIT_SET( bitboards.Parameters, 5 );
-			t_en_passant -= 32;
+		for( int i = 17; i > 11; i-- ) {
+			if( int(t_en_passant/bit2) == 1 ) {
+				BIT_SET( bitboards.Parameters, i );
+				t_en_passant -= bit2;
+			}
+			bit2 /= 2;
 		}
-		if( int(t_en_passant/16) == 1 ) {
-			BIT_SET( bitboards.Parameters, 6 );
-			t_en_passant -= 16;
-		}
-		if( int(t_en_passant/8)  == 1 ) {
-			BIT_SET( bitboards.Parameters, 7 );
-			t_en_passant -=  8;
-		}
-		if( int(t_en_passant/4)  == 1 ) {
-			BIT_SET( bitboards.Parameters, 8 );
-			t_en_passant -=  4;
-		}
-		if( int(t_en_passant/2)  == 1 ) {
-			BIT_SET( bitboards.Parameters, 9 );
-			t_en_passant -=  2;
-		}
-		if( int(t_en_passant/1)  == 1 ) {
-			BIT_SET( bitboards.Parameters,10 );
-			t_en_passant -=  1;
-		}
-
 		if( t_en_passant != 0 ) { std::cout << " ERROR en passant conversion in convert2bits!\n"; }
 	}
 	

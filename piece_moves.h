@@ -113,13 +113,13 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
 					moves_add[n_moves].piece = pawn;
 					// Set en_passant
-					int bit2 = 32, temp_passant = indices[i]+8*i_turn, i = 5;
+					int bit2 = 32, temp_passant = indices[i]+8*i_turn, i = 17;
 					while( temp_passant != 0 and bit2 != 0 ) {
 						if( int(temp_passant/bit2) ) {
 							BIT_SET(moves_add[n_moves].parameters,i);
 							temp_passant -= bit2;
 						}
-						i++;
+						i--;
 						bit2 /= 2;
 					}
 					n_moves++;

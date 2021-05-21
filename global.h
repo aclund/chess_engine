@@ -28,7 +28,7 @@ struct Chess_Board {
 
 	uint64_t All_Pieces;
 
-	uint16_t Parameters;
+	uint32_t Parameters;
 };
 extern Chess_Board bitboards;
 
@@ -39,7 +39,7 @@ struct Moves_s {
 	//Move_Tree *parents;
 
 	uint64_t bitmove;
-	uint16_t parameters;
+	uint32_t parameters;
 	int piece;
 };
 struct Move_Tree_s {
