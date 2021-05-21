@@ -7,17 +7,17 @@ inline int rel_col ( int i ) {
 inline void add_promotes( Moves *moves_promote ) {
 	// Reset curruent piece
 	int n = 0;
-	moves_promote[n].piece = -1*queen;
+	moves_promote[n].piece = queen + 6;
 	n++;
 	// Copy to other promote pieces
 	moves_promote[n].bitmove = moves_promote[n-1].bitmove;
-	moves_promote[n].piece   = -1*rook;
+	moves_promote[n].piece   = rook + 6;
 	n++;
 	moves_promote[n].bitmove = moves_promote[n-1].bitmove;
-	moves_promote[n].piece   = -1*bishop;
+	moves_promote[n].piece   = bishop + 6;
 	n++;
 	moves_promote[n].bitmove = moves_promote[n-1].bitmove;
-	moves_promote[n].piece   = -1*knight;
+	moves_promote[n].piece   = knight + 6;
 	n++;
 }
 
@@ -66,7 +66,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 			   	else if( t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
-					moves_add[n_moves].piece   = en_passant;
+					moves_add[n_moves].piece   = 12;
 //cout << en_passant << "SET take en passant " << t_en_passant << endl;
 					n_moves++;
 					if( pawn_rank == 7 ) { // Promote
@@ -91,7 +91,7 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 			   	else if( t_en_passant == index_update ) {
 					BIT_SET(moves_add[n_moves].bitmove, indices[i]);
 					BIT_SET(moves_add[n_moves].bitmove, index_update);
-					moves_add[n_moves].piece   = en_passant;
+					moves_add[n_moves].piece   = 12;
 //cout << en_passant << "SET take en passant " << t_en_passant << endl;
 //cout << i_turn << " turn " << index_update <<endl;
 					n_moves++;

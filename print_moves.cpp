@@ -13,11 +13,11 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
         for( int n = 0; n < n_moves; n++ ) {
                 cout << " " << n+1 << ":  ";
 		index = -1;
-                if( moves_print[n].piece != 0 ) {
+                if( moves_print[n].piece != 7 ) {
                         convert_binary( (moves_print[n].bitmove & ~your_pieces), &index );
                 }
                 switch( moves_print[n].piece ) {
-                  case 0: // CASTLE
+                  case 7: // CASTLE
                         if(      (moves_print[n].bitmove >>  7) & 1 ) { // K
                                 cout << "White Castle King\n";
                         }
@@ -34,7 +34,7 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                   case 1: // PAWN
                         cout << " Pawn ";
                   break;
-                  case 10:// EN PASSANT
+                  case 12:// EN PASSANT
                         cout << " En Passant ";
                   break;
                   case 2: // KNIGHT
@@ -52,16 +52,16 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                   case 6: // KING
                         cout << " King ";
                   break;
-                  case -2:// PROMOTE Knight
+                  case 8:// PROMOTE Knight
                         cout << " PROMOTE 2 Knight ";
                   break;
-                  case -3:// PROMOTE Bishop
+                  case 9:// PROMOTE Bishop
                         cout << " PROMOTE 2 Bishop ";
                   break;
-                  case -4:// PROMOTE Rook
+                  case 10:// PROMOTE Rook
                         cout << " PROMOTE 2 Rook ";
                   break;
-                  case -5:// PROMOTE Queen
+                  case 11:// PROMOTE Queen
                         cout << " PROMOTE 2 Queen ";
                   break;
 

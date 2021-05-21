@@ -113,7 +113,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 		//cout << i_turn << " CAN Castle King\n";
 				BIT_SET( moves_add[n_moves].bitmove, index_king   );
 				BIT_SET( moves_add[n_moves].bitmove, index_king+3 );
-				moves_add[n_moves].piece = 0;
+				moves_add[n_moves].piece = 7;
 				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
 				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
 				n_moves++;
@@ -141,7 +141,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 		//cout << i_turn << " CAN Castle Queen\n";
 				BIT_SET( moves_add[n_moves].bitmove, index_king   );
 				BIT_SET( moves_add[n_moves].bitmove, index_king-4 );
-				moves_add[n_moves].piece = 0;
+				moves_add[n_moves].piece = 7;
 				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
 				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
 				n_moves++;

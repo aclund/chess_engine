@@ -12,7 +12,7 @@ using namespace std;
 #include "check_check.h"
 #include "preform_move.h"
 
-int piece_convert(char piece) {
+uint8_t piece_convert(char piece) {
 	if(	   piece == 'p' ) {
 		return pawn;
 	} else if( piece == 'n' ) {
@@ -98,7 +98,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 					return 1;
 				}
 			}
-			move_piece = 0;
+			move_piece = 7;
 			move_index = 7 + color_offset;
 			found_piece = true;
 		}
@@ -118,7 +118,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 					return 1;
 				}
 			}
-			move_piece = 0;
+			move_piece = 7;
 			move_index = 0 + color_offset;
 			found_piece = true;
 		}
@@ -131,7 +131,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 
 	//Promote
 	bool promote = false;
-	int promote_piece;
+	uint8_t promote_piece;
 	if( move_AN.find('=') != string::npos ) {
 		promote = true;
 		read = move_AN[move_AN.find('=')+1];
@@ -139,7 +139,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			cout << " CANNOT convert inputed promotion!\n";
 			return 1;
 		}
-		promote_piece = -1*piece_convert(read);
+		promote_piece = piece_convert(read) + 6;
 		//cout << promote_piece << endl;
 	}
 
@@ -196,7 +196,7 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 	//print_moves( moves_add, n_possible_moves, your_pieces->All );
 
 	for( int n = 0; n < n_possible_moves; n++ ) {
-		if( moves_add[n].piece == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 10) ) {
+		if( moves_add[n].piece == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 12) ) {
 			int indices[3] = {-1,-1,-1};
 			convert_binary( moves_add[n].bitmove, indices );
 			int i = 0;

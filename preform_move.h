@@ -39,10 +39,10 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	curr_pieces->All ^= preform.bitmove;
 	chess_next.All_Pieces ^= preform.bitmove;
 
-	if( (preform.bitmove & other_pieces->All) != 0 or (preform.piece == 10) ) {
+	if( (preform.bitmove & other_pieces->All) != 0 or (preform.piece == 12) ) {
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	//if( preform.capture ) {
-		if( preform.piece == 10 ) {
+		if( preform.piece == 12 ) {
 			temp  = preform.bitmove;
 			temp &= ~curr_pieces->Pawns;
 //print_binary( temp ); cout << endl;
@@ -84,7 +84,7 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	
 //cout << " preform.piece " << preform.piece << endl;
 	switch( preform.piece ) {
-	  case 0: // CASTLE
+	  case 7: // CASTLE
 		if(      (preform.bitmove >>  7) & 1 ) { // K
 			BIT_FLIP( curr_pieces->King,   4 );
 			BIT_FLIP( curr_pieces->Rooks,  7 );
@@ -131,7 +131,7 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 		}
 	  break;
 	  case 1: // PAWN
-	  case 10:// EN PASSANT
+	  case 12:// EN PASSANT
 		curr_pieces->Pawns   ^=  preform.bitmove;
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
@@ -150,28 +150,28 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	  case 6: // KING
 		curr_pieces->King    ^=  preform.bitmove;
 	  break;
-	  case -2:// PROMOTE
+	  case 8:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Knights |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
-	  case -3:// PROMOTE
+	  case 9:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Bishops |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
-	  case -4:// PROMOTE
+	  case 10:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Rooks   |=  temp; 
 		curr_pieces->Pawns   &= ~preform.bitmove;
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
 	  break;
-	  case -5:// PROMOTE
+	  case 11:// PROMOTE
 		temp = preform.bitmove;
 		temp                 &= ~curr_pieces->Pawns;
 		curr_pieces->Queens  |=  temp; 

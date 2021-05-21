@@ -22,12 +22,12 @@ const int en_passant = 10;
 
 int move_index, move_row, move_column, move_piece, max_moves = 111;
 
-const int pawn   =  1;
-const int knight =  2;
-const int bishop =  3;
-const int rook   =  4;
-const int queen  =  5;
-const int king   =  6;
+const uint8_t pawn   =  1;
+const uint8_t knight =  2;
+const uint8_t bishop =  3;
+const uint8_t rook   =  4;
+const uint8_t queen  =  5;
+const uint8_t king   =  6;
 
 const int w_pawn   =  pawn;
 const int w_knight =  knight;

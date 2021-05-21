@@ -40,7 +40,7 @@ struct Moves_s {
 
 	uint64_t bitmove;
 	uint32_t parameters;
-	int piece;
+	uint8_t  piece;
 };
 struct Move_Tree_s {
 	int n_moves;
@@ -49,7 +49,7 @@ struct Move_Tree_s {
 
 struct Moves_temp {
 	uint64_t bitmove;
-	int piece;
+	uint8_t  piece;
 };
 
 extern int user_turn, max_depth;
@@ -63,8 +63,8 @@ extern const int castle, en_passant;
 extern int move_index, move_row, move_column, move_piece, max_moves;
 
 extern int board[64], *params, n_params, piece_score[12];
-extern const int   pawn,   knight,   bishop,   rook,   queen,   king,
-		 w_pawn, w_knight, w_bishop, w_rook, w_queen, w_king,
-		 b_pawn, b_knight, b_bishop, b_rook, b_queen, b_king;
+extern const uint8_t   pawn,   knight,   bishop,   rook,   queen,   king;
+extern const int     w_pawn, w_knight, w_bishop, w_rook, w_queen, w_king,
+		     b_pawn, b_knight, b_bishop, b_rook, b_queen, b_king;
 
 #endif
