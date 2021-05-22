@@ -16,6 +16,7 @@ int in_check(Moves*,Chess_Board,Moves_temp,uint64_t,int);
 void random_player();
 void engine();
 void generator(Chess_Board,Move_Tree*,int);
+int minimax(Chess_Board,Move_Tree*,int,int,int,bool,int*);
 void convert2board();
 void convert2bits();
 

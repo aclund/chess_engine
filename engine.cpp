@@ -34,7 +34,6 @@ void engine( ) {
 	cout << " Depth: " << max_depth << "\n";
 	cout << " Time used: " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
 
-
 /*
 //print_depth2( root->moves_arr[1].children );
 	int c_moves;
@@ -46,11 +45,14 @@ void engine( ) {
 		cout << "  " << c_moves << endl;
 	}
 */
+
 	int total_moves = count_moves( root );
 	cout << " Total Moves = " << total_moves << endl;
 
-
-	bitboards = preform_move( bitboards, root->moves_arr[0] );
+	int mmm_tasty_spot = 0;
+	int minimaxed = minimax(  bitboards, root, max_depth-1, -99999999, 99999999, true, &mmm_tasty_spot );
+	bitboards = preform_move( bitboards, root->moves_arr[mmm_tasty_spot] );
+	//cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
 
 	freeTree( root );
 
