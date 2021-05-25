@@ -17,8 +17,8 @@ int count_to_edge[64][8], n_knight_moves[64];
 uint64_t knight_squares[64][8];
 
 
-const int castle     =  0;
-const int en_passant = 10;
+const int castle     =  7;
+const int en_passant = 12;
 
 int move_index, move_row, move_column, move_piece, max_moves = 111;
 
@@ -50,5 +50,3 @@ int board[64] = { w_rook, w_knight, w_bishop, w_queen, w_king, w_bishop, w_knigh
 		  0, 0, 0, 0, 0, 0, 0, 0,
 		  b_pawn, b_pawn,   b_pawn,   b_pawn,  b_pawn, b_pawn,   b_pawn,   b_pawn,
 		  b_rook, b_knight, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook };
-
-//int n_params=6, *params;

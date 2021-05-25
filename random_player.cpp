@@ -21,7 +21,7 @@ void random_player() {
         all_moves( bitboards, root->moves_arr, &n_possible_moves );
 	root->n_moves = n_possible_moves;
 
-	cout << "# Possible Moves = " << n_possible_moves << "\n";
+	//cout << "# Possible Moves = " << n_possible_moves << "\n";
 	if( n_possible_moves == 0 ) { return; }
 
 	int ierr = check_bits( bitboards );

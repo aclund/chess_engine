@@ -10,8 +10,6 @@
 #define BIT_CHECK(a,b) (!!((a) & (1UL<<(b))))        // '!!' to make sure this returns 0 or 1
 
 
-//extern int pawn_counter, knight_counter, bishop_counter, rook_counter, queen_counter, king_counter;
-
 struct Pieces {
 	uint64_t Pawns;
 	uint64_t Knights;

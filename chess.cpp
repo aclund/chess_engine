@@ -14,8 +14,7 @@ using namespace std;
 int ierr;
 int n_params = 6;
 int  *params = new int[n_params];
-
-void is_over(Chess_Board);
+int move_counter = 1;
 
 int main(int argc, char *argv[]) {
 
@@ -44,7 +43,7 @@ int main(int argc, char *argv[]) {
 		if( ierr != 0 ) { break; }
 		convert2board( );
 		write_board( board, params );
-		if( params[0] == user_turn and !random ) {
+		if( params[0] == user_turn ) {
 			move( );
 		}
 		else {
@@ -60,7 +59,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
-		if( game_over( bitboards ) ) { is_over( bitboards ); break; }
+		move_counter += 0.5;
+		if( game_over( bitboards ) ) { is_over( bitboards, move_counter ); break; }
 
 	}
 
@@ -69,50 +69,4 @@ int main(int argc, char *argv[]) {
 	cout << "\n TIME in CHESS: " << (clock( ) - whole) / (double) CLOCKS_PER_SEC << "\n\n";
 
 	return 0;
-}
-
-void is_over( Chess_Board chess_board ) {
-
-        uint32_t half_clock = chess_board.Parameters;
-        half_clock %= 4096;
-        BIT_CLEAR( half_clock, 0 );
-        BIT_CLEAR( half_clock, 1 );
-        BIT_CLEAR( half_clock, 2 );
-        BIT_CLEAR( half_clock, 3 );
-        BIT_CLEAR( half_clock, 4 );
-        if( half_clock >= 3200 ) { cout << "50 Move STALEMATE! \n"; return; }
-	
-        int i_turn;
-	Pieces *your_pieces, *their_pieces;
-        switch( chess_board.Parameters & 1 ) {
-          case 0: // White to Move
-                your_pieces  = &chess_board.White;
-                their_pieces = &chess_board.Black;
-                i_turn = 1;
-          break;
-          case 1: // Black to Move
-                your_pieces  = &chess_board.Black;
-                their_pieces = &chess_board.White;
-                i_turn = -1;
-          break;
-	}
-
-	convert2board( );
-	write_board( board, params );
-
-	int n_checks = 0;
-	//Moves_temp *check_pieces = newTemp(2);
-	check_check( your_pieces->King, your_pieces->All, their_pieces, 
-		     ~chess_board.All_Pieces, i_turn, &n_checks );
-		     //~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
-
-	if( n_checks == 0 ) {
-		cout << " STALEMATE! \n";
-	}
-	else {
-		cout << " CHECKMATE! \n";
-	}
-
-	//delete[] check_pieces;
-	return;
 }

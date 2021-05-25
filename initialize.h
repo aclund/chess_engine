@@ -1,8 +1,8 @@
 inline Moves* newMoves( uint32_t param_bits, int n_moves ) {
 	Moves* moves_create = new Moves[n_moves];
 	for( int i = 0; i < n_moves; i++ ) {
-		moves_create[i].bitmove =  0;
-		moves_create[i].piece   = -1;
+		moves_create[i].bitmove = 0;
+		moves_create[i].piece   = 0;
 		moves_create[i].children = NULL;
 
                 moves_create[i].parameters  = param_bits;
@@ -16,8 +16,8 @@ inline Moves* newMoves( uint32_t param_bits, int n_moves ) {
 inline Moves_temp* newTemp( int n_moves ) {
 	Moves_temp* moves_create = new Moves_temp[n_moves];
 	for( int i = 0; i < n_moves; i++ ) {
-		moves_create[i].bitmove =  0;
-		moves_create[i].piece   = -1;
+		moves_create[i].bitmove = 0;
+		moves_create[i].piece   = 0;
 	}
 	return moves_create;
 }

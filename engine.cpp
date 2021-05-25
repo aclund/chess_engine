@@ -49,10 +49,10 @@ void engine( ) {
 	int total_moves = count_moves( root );
 	cout << " Total Moves = " << total_moves << endl;
 
-	int mmm_tasty_spot = 0;
-	int minimaxed = minimax(  bitboards, root, max_depth-1, -99999999, 99999999, true, &mmm_tasty_spot );
+	int mmm_tasty_spot;
+	int minimaxed = minimax(  bitboards, root, max_depth, -99999999, 99999999, true, &mmm_tasty_spot );
 	bitboards = preform_move( bitboards, root->moves_arr[mmm_tasty_spot] );
-	//cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
+	cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
 
 	freeTree( root );
 
