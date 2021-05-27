@@ -14,8 +14,6 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	Chess_Board chess_next = chess_current;
 
 	chess_next.Parameters = preform.parameters;
-//cout <<"  ";
-//print_binary(chess_next.Parameters);cout<<endl;
 
 	Pieces *curr_pieces, *other_pieces;
 	int i_turn;
@@ -41,14 +39,11 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 
 	if( (preform.bitmove & other_pieces->All) != 0 or (preform.piece == 12) ) {
 		chess_next.Parameters = clear_hbits( chess_next.Parameters );
-	//if( preform.capture ) {
 		if( preform.piece == 12 ) {
 			temp  = preform.bitmove;
 			temp &= ~curr_pieces->Pawns;
-//print_binary( temp ); cout << endl;
 			int take_pawn;
 			convert_binary( temp, &take_pawn );
-//cout << take_pawn <<endl;
 			take_pawn += 8*i_turn;
 			BIT_FLIP( other_pieces->Pawns, take_pawn );
 			BIT_FLIP( other_pieces->All,   take_pawn );
@@ -59,13 +54,10 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 				int qo_rook = 0 + 28*(1-i_turn);
 				int bit_other_offset = 0;
 				if( i_turn == -1 ) { bit_other_offset = 2; }
-//cout << " Catpuring rook.. " << ko_rook << endl; print_binary (other_pieces->Rooks & preform.bitmove);
 				if(      ((other_pieces->Rooks & preform.bitmove) >> ko_rook) & 1 ) {
-//cout << " k_rook @: " << ko_rook << endl;
 					BIT_CLEAR( chess_next.Parameters, 1+bit_other_offset );
 				}
 				else if( ((other_pieces->Rooks & preform.bitmove) >> qo_rook) & 1 ) {
-//cout << " q_rook @: " << qo_rook << endl;
 					BIT_CLEAR( chess_next.Parameters, 2+bit_other_offset );
 				}
 			}
@@ -82,7 +74,7 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 		chess_next.All_Pieces |= other_pieces->All;
 	}
 	
-//cout << " preform.piece " << preform.piece << endl;
+	//cout << " preform.piece " << preform.piece << endl;
 	switch( preform.piece ) {
 	  case 7: // CASTLE
 		if(      (preform.bitmove >>  7) & 1 ) { // K

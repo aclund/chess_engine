@@ -2,7 +2,6 @@ Compile    = g++
 Libraries  =
 #DebugFlag  = -g 
 OPTFlag    = -O3
-#CHESSFiles   = chess.cpp global.cpp write_board.cpp move.cpp valid_move.cpp index_square.cpp convert_fen.cpp set_moves.cpp
 CHESSFiles  := $(shell ls *.cpp)
 CHESSFiles  := $(filter-out randomer.cpp, $(CHESSFiles))
 CHESSoFiles  = ${CHESSFiles:.cpp=.o}
