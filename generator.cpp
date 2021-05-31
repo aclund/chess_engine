@@ -21,7 +21,7 @@ void generator( Chess_Board chess_board, Move_Tree *head, int depth ) {
 		//if( ierr != 0 ) { break; }
 
 		Move_Tree *curr = new Move_Tree;
-		*curr = (Move_Tree){ 0 };
+		*curr = (Move_Tree){ 0, NULL };
 		curr->moves_arr = newMoves( chess_moved.Parameters, max_moves );
 
 		all_moves( chess_moved, curr->moves_arr, &n_possible_moves );
