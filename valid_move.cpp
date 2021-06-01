@@ -29,9 +29,9 @@ uint8_t piece_convert(char piece) {
 	return 0;
 }
 
-int valid_move( string move_AN, int *moves_found, int ierr ) {
+int valid_move( string move_AN, int *moves_found ) {
 
-	ierr = 0;
+	int ierr = 0;
 
 	string string_move_piece  = "rnbqkp";
 	string move_letter_square = "abcdefgh";
@@ -156,13 +156,13 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 						move_square.insert( 0, &read );
 						letters++;
 				}
-				else if( move_number_square.find(read) != string::npos ) {
+				else if( move_number_square.find(read) != string::npos &&
+					 letters != 0 ) {
 						move_square.insert( 1, &read );
 						numbers++;
 				}
 		}
 		if( !found_piece ) { move_piece = pawn; }
-		if( numbers != 1 ) { cout << "ONE row number only!!!\n"; return 1; }
 		if( letters  < 1 ) { cout << "NO square letter?\n"; return 1; }
 		// b is a duplicate and semi handled
 		else if( letters  > 1 ) {
@@ -191,10 +191,12 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 	int n_possible_moves = 0;
 	all_moves( bitboards, moves_add, &n_possible_moves );
 	*moves_found = n_possible_moves;
-	cout << "# Possible Moves = " << n_possible_moves << "\n";
+	//cout << "# Possible Moves = " << n_possible_moves << "\n\n";
 
 	//print_moves( moves_add, n_possible_moves, your_pieces->All );
 
+	int duplicate_shield = 0;
+	int found[2] = {-1,-1};
 	for( int n = 0; n < n_possible_moves; n++ ) {
 		if( moves_add[n].piece == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 12) ) {
 			int indices[3] = {-1,-1,-1};
@@ -202,19 +204,45 @@ int valid_move( string move_AN, int *moves_found, int ierr ) {
 			int i = 0;
 			while( indices[i] != -1 ) {
 				if( indices[i] == move_index ) {
-//cout << "Making Move...\n";
-					bitboards = preform_move( bitboards, moves_add[n] );
-					
-					delete[] moves_add;
-					return 0;
+					found[duplicate_shield] = n;
+					duplicate_shield++;
 				}
 				i++;
 			}
 		}
-	}	
+	}
+	if(      duplicate_shield == 0 ) { ierr = 1; }
+	else if( duplicate_shield >  1 ) { // Duplicate
+		char identifier = move_AN[1];
+
+		int options = 2, distinguish = -1;
+		while( options != 0 ) {
+			int index, flipper = options - 1, flipper1 = options%2;
+			uint64_t p_move = moves_add[found[flipper]].bitmove;
+			p_move &= ~moves_add[found[flipper1]].bitmove;
+			convert_binary( p_move, &index );
+
+			string in_square = index2square( index );
+			if( in_square.find( identifier ) != string::npos ) { distinguish = flipper; break; }
+
+			options--;
+		}
+
+		if( distinguish == -1 ) {
+			cout << "ERROR: duplicate move not identified! Second character input MUST distinguish move\n";
+			ierr = 1;
+		}
+		else {
+			print_moves( &moves_add[found[distinguish]], 1, your_pieces->All );
+			bitboards = preform_move( bitboards, moves_add[found[distinguish]] );
+		}
+	}
+	else {
+		print_moves( &moves_add[found[0]], 1, your_pieces->All );
+		bitboards = preform_move( bitboards, moves_add[found[0]] );
+	}
 
 	delete[] moves_add;
 
-	// Move not found!
-	return 1;
+	return ierr;
 }

@@ -23,7 +23,7 @@ void is_over(Chess_Board,int);
 
 void write_board(int*,int*);
 void move();
-int valid_move(string,int*,int);
+int valid_move(string,int*);
 void index_square(string,int*,int*);
 int convert_fen();
 void ask_user(bool);
@@ -46,5 +46,6 @@ bool in_range(int,int);
 int rc2index(int,int);
 void index2rc(int,int*,int*);
 int pawn_rel_rank(int, int);
+string index2square(int);
 
 #endif

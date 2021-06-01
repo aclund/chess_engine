@@ -22,7 +22,7 @@ void is_over( Chess_Board chess_board, int i_turn_counter ) {
         BIT_CLEAR( half_clock, 2 );
         BIT_CLEAR( half_clock, 3 );
         BIT_CLEAR( half_clock, 4 );
-        if( half_clock >= 3200 ) { cout << "50 Move STALEMATE! \n"; return; }
+        if( half_clock >= 3200 ) { cout << "50 Move STALEMATE! \n\n"; return; }
 
         int i_turn;
         Pieces *your_pieces, *their_pieces;
@@ -46,10 +46,10 @@ void is_over( Chess_Board chess_board, int i_turn_counter ) {
                      //~chess_board.All_Pieces, i_turn, check_pieces, &n_checks );
 
         if( n_checks == 0 ) {
-                cout << " STALEMATE! \n";
+                cout << " STALEMATE! \n\n";
         }
         else {
-                cout << " CHECKMATE! \n";
+                cout << " CHECKMATE! \n\n";
         }
 
         //delete[] check_pieces;

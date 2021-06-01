@@ -10,7 +10,7 @@ inline int score(Chess_Board);
 
 int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int beta, bool maxer, int *spot ) {
 
-	int eval, max_eval, min_eval, point_me_there_daddy, *null;
+	int eval, max_eval, min_eval, point_me_there_daddy, null;
 
 	if( depth == 0 or head->n_moves == 0 ) { return score( chess_board ); }
 
@@ -21,7 +21,7 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 		for( int n = 0; n < head->n_moves; n++ ) {
 			chess_moved = preform_move( chess_board, head->moves_arr[n] );
 			eval = minimax( chess_moved, head->moves_arr[n].children, depth-1,
-					alpha, beta, false, null );
+					alpha, beta, false, &null );
 			if( eval > max_eval ) { point_me_there_daddy = n; }
 			max_eval = max(	max_eval, eval );
 			alpha    = max( alpha,    eval );
@@ -35,7 +35,7 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 		for( int n = 0; n < head->n_moves; n++ ) {
 			chess_moved = preform_move( chess_board, head->moves_arr[n] );
 			eval = minimax( chess_moved, head->moves_arr[n].children, depth-1,
-					alpha, beta, true, null );
+					alpha, beta, true, &null );
 			if( eval < min_eval ) { point_me_there_daddy = n; }
 			min_eval = min(	min_eval, eval );
 			beta     = min( beta,     eval );

@@ -14,7 +14,7 @@ using namespace std;
 int ierr;
 int n_params = 6;
 int  *params = new int[n_params];
-int move_counter = 1;
+float move_counter = 1;
 
 int main(int argc, char *argv[]) {
 
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]) {
 		if( ierr != 0 ) { break; }
 		convert2board( );
 		write_board( board, params );
+		last_known_board();
+
 		if( params[0] == user_turn ) {
 			move( );
 		}
@@ -65,8 +67,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	delete[] params;
-
-	cout << "\n TIME in CHESS: " << (clock( ) - whole) / (double) CLOCKS_PER_SEC << "\n\n";
 
 	return 0;
 }

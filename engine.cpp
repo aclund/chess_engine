@@ -30,10 +30,6 @@ void engine( ) {
 
 	generator( bitboards, root, max_depth-1 );
 
-
-	cout << " Depth: " << max_depth << "\n";
-	cout << " Time used: " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
-
 /*
 //print_depth2( root->moves_arr[1].children );
 	int c_moves;
@@ -48,14 +44,19 @@ void engine( ) {
 
 	int total_moves = count_moves( root );
 	cout << " Total Moves = " << total_moves << endl;
+	cout << " Time used: " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
+
 
 	bool l_turn;
-	if( bitboards.Parameters & 1 ) { l_turn = false; }
-	else { l_turn = true; }
+	uint64_t n_print_pieces;
+	if( bitboards.Parameters & 1 ) { l_turn = false; n_print_pieces = bitboards.Black.All; }
+	else { l_turn = true; n_print_pieces = bitboards.White.All; }
 	int mmm_tasty_spot;
 	int minimaxed = minimax(  bitboards, root, max_depth, -99999999, 99999999, l_turn, &mmm_tasty_spot );
 	bitboards = preform_move( bitboards, root->moves_arr[mmm_tasty_spot] );
-	cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
+	//cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
+
+	print_moves( &root->moves_arr[mmm_tasty_spot], 1, n_print_pieces );
 
 	freeTree( root );
 

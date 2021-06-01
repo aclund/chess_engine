@@ -10,8 +10,6 @@ void ask_user( bool engine ) {
 
 	bool found;
 
-	cout << "\n WARNING: Engine only find mate...+1!\n\n";
-
 	cout << "_____________________________________________________________________\n";
 	cout << "   __________                  __________   __________    __________ \n";
 	cout << "  |             |          |  |            |             |           \n";

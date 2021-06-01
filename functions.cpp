@@ -44,3 +44,29 @@ int pawn_rel_rank( int i, int i_turn ) {
 	//cout << "i, rel_rank = " << i << " "<< rel_rank << "\n";
 	return rel_rank; 
 }
+string index2square( int index ) {
+	string square = " ";
+
+	int rel_row, rel_col;
+	index2rc( index, &rel_row, &rel_col );
+
+	if(      rel_col == 7 ) square += "h";
+	else if( rel_col == 6 ) square += "g";
+	else if( rel_col == 5 ) square += "f";
+	else if( rel_col == 4 ) square += "e";
+	else if( rel_col == 3 ) square += "d";
+	else if( rel_col == 2 ) square += "c";
+	else if( rel_col == 1 ) square += "b";
+	else if( rel_col == 0 ) square += "a";
+
+	if(      rel_row == 0 ) square += "1 ";
+	else if( rel_row == 1 ) square += "2 ";
+	else if( rel_row == 2 ) square += "3 ";
+	else if( rel_row == 3 ) square += "4 ";
+	else if( rel_row == 4 ) square += "5 ";
+	else if( rel_row == 5 ) square += "6 ";
+	else if( rel_row == 6 ) square += "7 ";
+	else if( rel_row == 7 ) square += "8 ";
+
+	return square;
+}

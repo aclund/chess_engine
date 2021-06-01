@@ -26,7 +26,7 @@ void move( ) {
 		move_AN = removeSpaces(move_AN);
 	
 		int n_possible_moves;
-		ierr = valid_move( move_AN, &n_possible_moves, ierr );
+		ierr = valid_move( move_AN, &n_possible_moves );
 
 		if( ierr != 0 ) {
 			cout << " Either I suck at coding or you've forgotten the rules of CHESS!\n";
