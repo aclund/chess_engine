@@ -70,5 +70,15 @@ void set_moves( ) {
 	}
 	*/
 
+	// Add piece_scores to pst's
+	for( int i = 0; i < 64; i++ ) {
+		pst_pawns  [i] += piece_scores[0];
+		pst_knights[i] += piece_scores[1];
+		pst_bishops[i] += piece_scores[2];
+		pst_rooks  [i] += piece_scores[3];
+		pst_queens [i] += piece_scores[4];
+		pst_king   [i] += piece_scores[5];
+	}
+
 	return;
 }

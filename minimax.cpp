@@ -12,7 +12,12 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 
 	int eval, max_eval, min_eval, point_me_there_daddy, null;
 
-	if( depth == 0 or head->n_moves == 0 ) { return score( chess_board ); }
+	if( depth == max_depth ) cout << " Current Score = " << score( chess_board ) << "\n\n";
+
+	if( depth == 0 ) { return score( chess_board ); }
+	else if( head->n_moves == 0 ) {
+		if( chess_board.Parameters & 1 ) { return 9999; } else { return -9999; }
+	}
 
 	Chess_Board chess_moved;
 
@@ -56,41 +61,46 @@ inline int countSetBits( uint64_t in ) {
 	}
 	return count;
 }
+inline void indexer( uint64_t pieces, int *indices ) {
+	for( int i = 0; i < 9; i++ ) {
+		indices[i] = -1;
+	}
+	convert_binary( pieces, indices );
+	return;
+}
 
 inline int score( Chess_Board chess_board ) {
 
-	int board_eval = 0;
+	int board_eval = 0, indices[9], i, table;
 
+/*
 	int i_turn;
-	switch( chess_board.Parameters & 1 ) {
-	  case 0: // White to Move
-		//your_pieces  = &chess_board.White;
-		//their_pieces = &chess_board.Black;
-		i_turn = -1;
-	  break;
-	  case 1: // Black to Move
-		//your_pieces  = &chess_board.Black;
-		//their_pieces = &chess_board.White;
-		i_turn =  1;
-	  break;
-	}
+	if( chess_board.Parameters & 1 ) { i_turn = 1; }
+	else { i_turn = -1; }
 
 	if( game_over( chess_board ) ) { return i_turn*9999; }
+*/
 
-	board_eval = piece_score[ 0]*countSetBits( chess_board.Black.King    ) +
-		     piece_score[ 1]*countSetBits( chess_board.Black.Queens  ) +
-		     piece_score[ 2]*countSetBits( chess_board.Black.Rooks   ) +
-		     piece_score[ 3]*countSetBits( chess_board.Black.Bishops ) +
-		     piece_score[ 4]*countSetBits( chess_board.Black.Knights ) +
-		     piece_score[ 5]*countSetBits( chess_board.Black.Pawns   ) +
-		     piece_score[ 6]*countSetBits( chess_board.White.Pawns   ) +
-		     piece_score[ 7]*countSetBits( chess_board.White.Knights ) +
-		     piece_score[ 8]*countSetBits( chess_board.White.Bishops ) +
-		     piece_score[ 9]*countSetBits( chess_board.White.Rooks   ) +
-		     piece_score[10]*countSetBits( chess_board.White.Queens  ) +
-		     piece_score[11]*countSetBits( chess_board.White.King    );
-
-	//cout << board_eval << endl;
+	// Black Pieces Table Score
+	for( uint64_t* piece = (uint64_t*)&chess_board.Black.Pawns, table = 0;
+	    piece < (uint64_t*)((uint8_t*)&chess_board.Black.Pawns + 6*sizeof(uint64_t)); piece++, table++ ) {
+		indexer( *piece, indices );
+		i = 0;
+		while( indices[i] != -1 ) {
+			board_eval -= pst_table[table] [indices[i]];
+			i++;
+		}
+	}
+	// White Pieces Table Score
+	for( uint64_t* piece = (uint64_t*)&chess_board.White.Pawns, table = 0;
+	    piece < (uint64_t*)((uint8_t*)&chess_board.White.Pawns + 6*sizeof(uint64_t)); piece++, table++ ) {
+		indexer( *piece, indices );
+		i = 0;
+		while( indices[i] != -1 ) {
+			board_eval += pst_table[table] [63 - indices[i]];
+			i++;
+		}
+	}
 
 	return board_eval;
 }

@@ -7,8 +7,8 @@ Chess_Board bitboards;
 
 int user_turn, max_depth;
 
-// b_king, b_queen, b_rook, b_bishop, b_knight, b_pawn, w_pawn, w_knight, w_bishop, w_rook, w_queen, w_king
-int piece_score[12] = { -9999, -800, -500, -300, -300, -100, 100, 300, 300, 500, 800, 9999 };
+//                     pawns, knights, bishops, rooks, queens, king
+int piece_scores[6] = { 100, 340, 350, 525, 1000, 9999 };
 
 int index_directions[8] = {  8,  1, -8, -1,  9, -7, -9,  7 };
 int row_directions[8]   = {  1,  0, -1,  0,  1, -1, -1,  1 };

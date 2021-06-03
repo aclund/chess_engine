@@ -2,7 +2,7 @@
 using namespace std;
 
 #include "global.h"
-#include "functions.h"
+//#include "functions.h"
 #include "initialize.h"
 #include "convert_binary.h"
 #include "piece_moves.h"

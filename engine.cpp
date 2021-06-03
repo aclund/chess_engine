@@ -19,6 +19,8 @@ void engine( ) {
 
         clock_t start = clock();
 
+	cout << "\n Calculating... \n";
+
 	Move_Tree *root = new Move_Tree;
 	*root = (Move_Tree){ 0 };
 
@@ -29,6 +31,8 @@ void engine( ) {
 	root->n_moves = n_possible_moves;
 
 	generator( bitboards, root, max_depth-1 );
+
+        clock_t f_moves = clock();
 
 /*
 //print_depth2( root->moves_arr[1].children );
@@ -44,7 +48,6 @@ void engine( ) {
 
 	int total_moves = count_moves( root );
 	cout << " Total Moves = " << total_moves << endl;
-	cout << " Time used: " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
 
 
 	bool l_turn;
@@ -54,7 +57,11 @@ void engine( ) {
 	int mmm_tasty_spot;
 	int minimaxed = minimax(  bitboards, root, max_depth, -99999999, 99999999, l_turn, &mmm_tasty_spot );
 	bitboards = preform_move( bitboards, root->moves_arr[mmm_tasty_spot] );
-	//cout << " Going with " << mmm_tasty_spot << "  score: " << minimaxed << endl;
+	//cout << " Score found: " << minimaxed << "\n\n";
+
+	cout << " Time used:  Generator " << ( f_moves - start ) / (double) CLOCKS_PER_SEC << endl <<
+		"           Evaluations " << ( clock() - f_moves ) / (double) CLOCKS_PER_SEC << "\n\n";
+
 
 	print_moves( &root->moves_arr[mmm_tasty_spot], 1, n_print_pieces );
 
