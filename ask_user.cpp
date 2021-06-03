@@ -10,6 +10,8 @@ void ask_user( bool engine ) {
 
 	bool found;
 
+	cout << "\n WARNING: Engine may attempt to stalemate over checkmate...\n\n";
+
 	cout << "_____________________________________________________________________\n";
 	cout << "   __________                  __________   __________    __________ \n";
 	cout << "  |             |          |  |            |             |           \n";
@@ -43,6 +45,7 @@ void ask_user( bool engine ) {
 		found = false;
 		while( found == false ) {
 			cout << " Ender Maximum Search Depth\n";
+			cout << " CURRENT Recomendation  -  (4/5)\n";
 			cin >> max_depth;
 			if( max_depth > 0 && max_depth < 11 ) { found = true; }
 			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }

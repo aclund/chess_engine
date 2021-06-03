@@ -72,12 +72,19 @@ void set_moves( ) {
 
 	// Add piece_scores to pst's
 	for( int i = 0; i < 64; i++ ) {
-		pst_pawns  [i] += piece_scores[0];
-		pst_knights[i] += piece_scores[1];
-		pst_bishops[i] += piece_scores[2];
-		pst_rooks  [i] += piece_scores[3];
-		pst_queens [i] += piece_scores[4];
-		pst_king   [i] += piece_scores[5];
+		mg_pawn_table  [i] += mg_pieces[0];
+		mg_knight_table[i] += mg_pieces[1];
+		mg_bishop_table[i] += mg_pieces[2];
+		mg_rook_table  [i] += mg_pieces[3];
+		mg_queen_table [i] += mg_pieces[4];
+		mg_king_table  [i] += mg_pieces[5];
+
+		eg_pawn_table  [i] += eg_pieces[0];
+		eg_knight_table[i] += eg_pieces[1];
+		eg_bishop_table[i] += eg_pieces[2];
+		eg_rook_table  [i] += eg_pieces[3];
+		eg_queen_table [i] += eg_pieces[4];
+		eg_king_table  [i] += eg_pieces[5];
 	}
 
 	return;

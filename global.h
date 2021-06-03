@@ -60,8 +60,12 @@ extern const int castle, en_passant;
 
 extern int move_index, move_row, move_column, move_piece, max_moves;
 
-extern int board[64], *params, n_params, piece_scores[6];
-extern int pst_pawns[64], pst_knights[64], pst_bishops[64], pst_rooks[64], pst_queens[64], pst_king[64], *pst_table[6];
+extern int board[64], *params, n_params;
+extern int mg_pieces[6], mg_pawn_table[64], mg_knight_table[64], mg_bishop_table[64],
+	   mg_rook_table[64], mg_queen_table[64], mg_king_table[64], *mg_pst_table[6],
+	   eg_pieces[6], eg_pawn_table[64], eg_knight_table[64], eg_bishop_table[64],
+	   eg_rook_table[64], eg_queen_table[64], eg_king_table[64], *eg_pst_table[6],
+	   piece2phase[6];
 extern const uint8_t   pawn,   knight,   bishop,   rook,   queen,   king;
 extern const int     w_pawn, w_knight, w_bishop, w_rook, w_queen, w_king,
 		     b_pawn, b_knight, b_bishop, b_rook, b_queen, b_king;
