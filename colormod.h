@@ -1,14 +1,18 @@
 #include <ostream>
 namespace Color {
     enum Code {
-	FG_WHITE    = 101,
-	FG_BLACK    = 30,
+	//FG_WHITE    = 33,
+	FG_WHITE    = 29,
+	FG_BLACK    = 91,
+	//FG_BLACK    = 30,
         FG_RED      = 31,
         FG_GREEN    = 32,
         FG_BLUE     = 34,
         FG_DEFAULT  = 39,
+	//BG_WHITE    = 47,
 	BG_WHITE    = 47,
 	BG_BLACK    = 100,
+	//BG_BLACK    = 101,
         BG_RED      = 41,
         BG_GREEN    = 42,
         BG_BLUE     = 44,
@@ -20,7 +24,7 @@ namespace Color {
         Modifier(Code pCode) : code(pCode) {}
         friend std::ostream&
         operator<<(std::ostream& os, const Modifier& mod) {
-            return os << "\033[" << mod.code << "m";
+            return os << "\033[" << mod.code << ";1m";
             //return os << "\u001b[" << mod.code << "m";
         }
     };

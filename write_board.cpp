@@ -10,6 +10,9 @@ using namespace std;
 void squares( int board_in[64], int row ) {
 	Color::Modifier black(Color::FG_BLACK);
 	Color::Modifier white(Color::FG_WHITE);
+	//Color::Modifier white(Color::FG_RED);
+	//Color::Modifier back_black(Color::BG_BLACK);
+	//Color::Modifier back_white(Color::BG_WHITE);
 	Color::Modifier back_black(Color::BG_BLACK);
 	Color::Modifier back_white(Color::BG_WHITE);
 	Color::Modifier def(Color::FG_DEFAULT);
@@ -17,6 +20,24 @@ void squares( int board_in[64], int row ) {
 
 	string piece;
 	int col = row%2;
+
+	cout << back_def << " |";
+	if( col%2 == 0 ) {
+		for( int c = 0; c < 4; c ++ ) {
+			cout << back_black << "        ";
+			cout << back_white << "        ";
+		}
+	}
+	else {
+		for( int c = 0; c < 4; c ++ ) {
+			cout << back_white << "        ";
+			cout << back_black << "        ";
+		}
+	}
+	cout << back_def << "\n";
+	cout << row+1 << "|";
+
+
         for( int i = 0; i < 8; i++ ) {
 
 		if( abs(board_in[row*8+i]) == pawn   ) { piece = "\u2659"; }
@@ -34,16 +55,31 @@ void squares( int board_in[64], int row ) {
 		}
 
 		if( board_in[row*8+i] == 0 ) {
-			cout << "    ";
+			cout << "        ";
 		} else if( board_in[row*8+i] > 0 ) {
-			cout << " " << white << piece << def << "  ";
+			cout << "   " << white << piece << def << "    ";
 		} else if( board_in[row*8+i] < 0 ) {
-			cout << " " << black << piece << def <<"  ";
+			cout << "   " << black << piece << def <<"    ";
 		}
 
 		cout << back_def;
 		col++;
 	}
+
+	cout << back_def << def << "\n |";
+	if( col%2 == 0 ) {
+		for( int c = 0; c < 4; c ++ ) {
+			cout << back_black << "        ";
+			cout << back_white << "        ";
+		}
+	}
+	else {
+		for( int c = 0; c < 4; c ++ ) {
+			cout << back_white << "        ";
+			cout << back_black << "        ";
+		}
+	}
+	cout << back_def << "\n";
 
 	cout << back_def << def;
 	
@@ -52,23 +88,18 @@ void squares( int board_in[64], int row ) {
 
 void write_board( int board_in[64], int *params_in ) {
 
+	cout << "\e[1m";
 	cout << "\n";
-	cout << "   A   B   C   D   E   F   G   H\n";
-	cout << " _______________________________\n";
+	cout << "     A       B       C       D       E       F       G       H\n";
+	cout << "  ________________________________________________________________\n";
 
 	int row;
         for( int i = 0; i < 8; i++ ) {
 		if(      user_turn == -1 ) { row = i + 1; }
 		else if( user_turn ==  1 ) { row = 8 - i; }
 		else{ cout << " ERROR in write_board_in\n"; }
-//row = 8 - i;
-		cout << row << "|";
+
                 squares(board_in, row-1);
-		if( i != 7 ) {
-			cout << "\n" << " |\n";
-		} else {
-			cout << "\n\n";
-		}
 	}
 
 	if(      params_in[0] ==  1 ) { cout << " WHITE to move: "; }
@@ -81,6 +112,7 @@ void write_board( int board_in[64], int *params_in ) {
 	if( params_in[4] == 1 ) { cout << "q"; }
 
 	cout << "  " << params_in[5] << "\n";
+	cout << "\e[0m";
 
 	return;
 }

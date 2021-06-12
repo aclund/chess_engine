@@ -40,13 +40,7 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 	  break;
 	}
 
-        int t_en_passant = 0, bit2 = 1;
-        for( int i = 12; i < 18; i++ ) {
-                if( (chess_board.Parameters >> i) & 1 ) {
-                        t_en_passant += bit2;
-                }
-                bit2 *= 2;
-        }
+	int t_en_passant = ( ((1 << 19) - 1) & (chess_board.Parameters >> 12));
 	if( t_en_passant == 0 ) { t_en_passant = -1; } //cout << t_en_passant << " t_en_passant\n";
 
 	uint64_t not_all_pieces = ~chess_board.All_Pieces;

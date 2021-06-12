@@ -22,6 +22,9 @@ const int en_passant = 12;
 
 int move_index, move_row, move_column, move_piece, max_moves = 111;
 
+int n_params = 6;
+int  *params = new int[n_params];
+
 const uint8_t pawn   =  1;
 const uint8_t knight =  2;
 const uint8_t bishop =  3;

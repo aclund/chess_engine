@@ -17,8 +17,7 @@ void generator( Chess_Board chess_board, Move_Tree *head, int depth ) {
 	for( int n = 0; n < head->n_moves; n++ ) {
 		chess_moved = preform_move( chess_board, head->moves_arr[n] );
 
-		//ierr = check_bits( chess_moved );
-		//if( ierr != 0 ) { break; }
+		//ierr = check_bits( chess_moved ); if( ierr != 0 ) { break; }
 
 		Move_Tree *curr = new Move_Tree;
 		*curr = (Move_Tree){ 0, NULL };

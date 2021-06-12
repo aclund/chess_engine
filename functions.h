@@ -1,16 +1,15 @@
 #include <string>
+using namespace std;
 
 #ifndef functions
 #define functions
-
-using namespace std;
 
 #include "global.h"
 
 void set_bitboards();
 void set_moves();
 void all_moves(Chess_Board,Moves*,int*);
-int in_check(Moves*,Chess_Board,Moves_temp,uint64_t,int);
+//int in_check(Moves*,Chess_Board,Moves_temp,uint64_t,int);
 //int king_moves(Moves*,uint64_t,uint64_t,Pieces*,uint64_t,int);
 //void check_check(uint64_t,uint64_t,Pieces*,uint64_t,uint64_t*,int*);
 void random_player();
@@ -30,17 +29,9 @@ void ask_user(bool);
 bool game_over( Chess_Board );
 
 int check_bits(Chess_Board);
+void print_binary(uint64_t);
 void print_moves(Moves*,int,uint64_t);
 void last_known_board();
-
-/*
-int minimax(int**, int, int, int, bool);
-int score(int*);
-*/
-
-Move_Tree* newTree(Moves*,int);
-void freeTree(Move_Tree*);
-void print_binary(uint64_t);
 
 bool in_range(int,int);
 int rc2index(int,int);

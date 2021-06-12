@@ -11,13 +11,12 @@ using namespace std;
 #include "piece_moves.h"
 #include "check_check.h"
 
-int ierr;
-int n_params = 6;
-int  *params = new int[n_params];
-
 int main(int argc, char *argv[]) {
 
 	clock_t whole = clock( );
+
+	int ierr;
+	float move_counter = 1;
 
 	bool read_fen = false;
 	for( int i = 1; i < argc; i++ ) {
@@ -29,12 +28,11 @@ int main(int argc, char *argv[]) {
 
 	set_moves( ); user_turn = 1;
 
-	float turn_counter = 1;
 	while( true ) {
 		random_player( );
 
-		turn_counter += 0.5;
-		if( game_over( bitboards ) ) { is_over( bitboards, turn_counter ); break; }
+		move_counter += 0.5;
+		if( game_over( bitboards ) ) { is_over( bitboards, move_counter ); break; }
 	}
 
 	delete[] params;
