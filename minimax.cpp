@@ -3,6 +3,7 @@ using namespace std;
 
 #include "functions.h"
 #include "global.h"
+#include "initialize.h"
 #include "convert_binary.h"
 #include "preform_move.h"
 
@@ -10,12 +11,12 @@ inline int score(Chess_Board);
 
 int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int beta, bool maxer, int *spot ) {
 
-	int eval, max_eval, min_eval, point_me_there_daddy, null;
+	int n_possible_moves, eval, max_eval, min_eval, point_me_there_daddy, null;
 
-	if( depth == max_depth ) cout << " Current Score = " << score( chess_board ) << "\n\n";
-
+	if( depth == max_depth ) cout << " Current Score = " << score( chess_board ) << "\n";
 	if( depth == 0 ) { return score( chess_board ); }
-	else if( head->n_moves == 0 ) {
+
+	if( head->n_moves == 0 ) {
 		if( chess_board.Parameters & 1 ) { return 9999; } else { return -9999; }
 	}
 
@@ -25,6 +26,16 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 		max_eval = -99999999;
 		for( int n = 0; n < head->n_moves; n++ ) {
 			chess_moved = preform_move( chess_board, head->moves_arr[n] );
+
+			// Find moves at next depth
+			Move_Tree *curr = new Move_Tree;
+			if( depth != 1 ) {
+				curr->moves_arr = newMoves( chess_moved.Parameters, max_moves );
+				all_moves( chess_moved, curr->moves_arr, &n_possible_moves );
+				curr->n_moves = n_possible_moves;
+				head->moves_arr[n].children = curr;
+			}
+
 			eval = minimax( chess_moved, head->moves_arr[n].children, depth-1,
 					alpha, beta, false, &null );
 			if( eval > max_eval ) { point_me_there_daddy = n; }
@@ -39,6 +50,16 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 		min_eval =  99999999;
 		for( int n = 0; n < head->n_moves; n++ ) {
 			chess_moved = preform_move( chess_board, head->moves_arr[n] );
+
+			// Find moves at next depth
+			Move_Tree *curr = new Move_Tree;
+			if( depth != 1 ) {
+				curr->moves_arr = newMoves( chess_moved.Parameters, max_moves );
+				all_moves( chess_moved, curr->moves_arr, &n_possible_moves );
+				curr->n_moves = n_possible_moves;
+				head->moves_arr[n].children = curr;
+			}
+
 			eval = minimax( chess_moved, head->moves_arr[n].children, depth-1,
 					alpha, beta, true, &null );
 			if( eval < min_eval ) { point_me_there_daddy = n; }

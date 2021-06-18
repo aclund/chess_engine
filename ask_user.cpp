@@ -45,7 +45,7 @@ void ask_user( bool engine ) {
 		found = false;
 		while( found == false ) {
 			cout << " Ender Maximum Search Depth\n";
-			cout << " CURRENT Recomendation  -  (4/5)\n";
+			cout << " CURRENT Recomendation  -  (5/6)\n";
 			cin >> max_depth;
 			if( max_depth > 0 && max_depth < 11 ) { found = true; }
 			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }

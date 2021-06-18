@@ -30,11 +30,11 @@ void engine( ) {
 	all_moves( bitboards, root->moves_arr, &n_possible_moves );
 	root->n_moves = n_possible_moves;
 
+/*
 	generator( bitboards, root, max_depth-1 );
 
         clock_t f_moves = clock();
 
-/*
 //print_depth2( root->moves_arr[1].children );
 	int c_moves;
 	for( int n = 0; n < n_possible_moves; n++ ) {
@@ -44,11 +44,10 @@ void engine( ) {
 		else { c_moves = count_bottom( root->moves_arr[n].children, max_depth-1 ); }
 		cout << "  " << c_moves << endl;
 	}
-*/
 
 	int total_moves = count_moves( root );
 	cout << " Total Moves = " << total_moves << endl;
-
+*/
 
 	bool l_turn;
 	uint64_t n_print_pieces;
@@ -57,10 +56,9 @@ void engine( ) {
 	int mmm_tasty_spot;
 	int minimaxed = minimax(  bitboards, root, max_depth, -99999999, 99999999, l_turn, &mmm_tasty_spot );
 	bitboards = preform_move( bitboards, root->moves_arr[mmm_tasty_spot] );
-	//cout << " Score found: " << minimaxed << "\n\n";
+	cout << " ** Eval Score = " << minimaxed << "\n\n";
 
-	cout << " Time used:  Generator " << ( f_moves - start ) / (double) CLOCKS_PER_SEC << endl <<
-		"           Evaluations " << ( clock() - f_moves ) / (double) CLOCKS_PER_SEC << "\n\n";
+	cout << " Time used:  " << ( clock() - start ) / (double) CLOCKS_PER_SEC << "\n\n";
 
 
 	print_moves( &root->moves_arr[mmm_tasty_spot], 1, n_print_pieces );
