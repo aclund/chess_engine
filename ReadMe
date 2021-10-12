@@ -10,5 +10,5 @@
   Move generation is still non-optimal and slow.
   Suggested engine depth:
 	4 - Easy
-	5 - Immediate return
+	5 - Quick return
 	6 - ~45/60 seconds
