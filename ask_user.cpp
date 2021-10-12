@@ -1,4 +1,5 @@
 #include <string>
+#include <limits>
 #include <iostream>
 
 using namespace std;
@@ -29,7 +30,7 @@ void ask_user( bool engine ) {
 	found = false;
 //found = true; user_turn = -1*params[0];
 	while( found == false ) {
-		cout << " Pick a Color to Play (w/b)\n";
+		cout << " Pick a Color to Play\n\n";
 		cin >> color;
 		found = true;
 		if(      color.find('w') != string::npos or 
@@ -38,6 +39,7 @@ void ask_user( bool engine ) {
 			 color.find('B') != string::npos ) { user_turn = -1; }
 		else{ cout << " Pick a Color??\n"; found = false; }
 	}
+	cout << "\n";
 
 
 	// MAX DEPTH
@@ -45,11 +47,16 @@ void ask_user( bool engine ) {
 		found = false;
 		while( found == false ) {
 			cout << " Ender Maximum Search Depth\n";
-			cout << " CURRENT Recomendation  -  (5/6)\n";
+			cout << " Current RECOMENDATION(4-6)\n\n";
 			cin >> max_depth;
-			if( max_depth > 0 && max_depth < 11 ) { found = true; }
+			cout << "\n";
+			if( !cin.good() ) {
+				cin.clear();
+				cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				cout << " ERROR\n";
+			 }
+			else if( max_depth > 0 && max_depth < 11 ) { found = true; }
 			else if( max_depth > 10 ) { cout << " Eh dont get ahead of yourself\n"; }
-			else { cout << " ERROR\n"; }
 		}
 	}
 

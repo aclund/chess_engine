@@ -1,10 +1,14 @@
 
-
 		CHESS ENGINE
 
-  Old school chess interface to play computer.
+
+  Old school chess-computer interface.
+
+
+		'make chess'
 
   Move generation is still non-optimal and slow.
   Suggested engine depth:
-	4 - for immediate return
-	5 - ~30/45 seconds
+	4 - Easy
+	5 - Immediate return
+	6 - ~45/60 seconds

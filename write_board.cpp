@@ -102,17 +102,19 @@ void write_board( int board_in[64], int *params_in ) {
                 squares(board_in, row-1);
 	}
 
-	if(      params_in[0] ==  1 ) { cout << " WHITE to move: "; }
-	else if( params_in[0] == -1 ) { cout << " BLACK to move: "; }
+	if(      params_in[0] ==  1 ) { cout << "  WHITE to move - "; }
+	else if( params_in[0] == -1 ) { cout << "  BLACK to move - "; }
 	else { cout << " ERROR: i_turn in write "; }
 
+	/*
 	if( params_in[1] == 1 ) { cout << "K"; }
 	if( params_in[2] == 1 ) { cout << "Q"; }
 	if( params_in[3] == 1 ) { cout << "k"; }
 	if( params_in[4] == 1 ) { cout << "q"; }
-
 	cout << "  " << params_in[5] << "\n";
-	cout << "\e[0m";
+	*/
+
+	cout << "\n\e[0m\n\n";
 
 	return;
 }

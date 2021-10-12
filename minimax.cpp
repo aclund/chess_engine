@@ -13,7 +13,7 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 
 	int n_possible_moves, eval, max_eval, min_eval, point_me_there_daddy, null;
 
-	if( depth == max_depth ) cout << " Current Score = " << score( chess_board ) << "\n";
+	//if( depth == max_depth ) cout << " Current Score = " << score( chess_board ) << "\n";
 	if( depth == 0 ) { return score( chess_board ); }
 
 	if( head->n_moves == 0 ) {
@@ -74,14 +74,6 @@ int minimax( Chess_Board chess_board, Move_Tree *head, int depth, int alpha, int
 	return 0;
 }
 
-inline int countSetBits( uint64_t in ) {
-	int count = 0;
-	while( in ) {
-		in &= (in - 1);
-		count++;
-	}
-	return count;
-}
 inline void indexer( uint64_t pieces, int *indices ) {
 	for( int i = 0; i < 9; i++ ) {
 		indices[i] = -1;
@@ -92,30 +84,9 @@ inline void indexer( uint64_t pieces, int *indices ) {
 
 inline int score( Chess_Board chess_board ) {
 
-/*
-	int i_turn;
-	if( chess_board.Parameters & 1 ) { i_turn = 1; }
-	else { i_turn = -1; }
-
-	if( game_over( chess_board ) ) { return i_turn*9999; }
-*/
-
 	int mg_eval = 0, eg_eval = 0, game_phase = 0;
 	int indices[9], i, table;
-	// Black Pieces Table Score
-	for( uint64_t* piece = (uint64_t*)&chess_board.Black.Pawns, table = 0;
-	    piece < (uint64_t*)((uint8_t*)&chess_board.Black.Pawns + 6*sizeof(uint64_t)); piece++, table++ ) {
 
-		indexer( *piece, indices );
-		i = 0;
-		while( indices[i] != -1 ) {
-			mg_eval -= mg_pst_table[table] [indices[i]];
-			eg_eval -= eg_pst_table[table] [indices[i]];
-			game_phase += piece2phase[table];
-		//if( table == 1 ) cout << mg_pst_table[table] [indices[i]] << " " << indices[i]<< endl;
-			i++;
-		}
-	}
 	// White Pieces Table Score
 	for( uint64_t* piece = (uint64_t*)&chess_board.White.Pawns, table = 0;
 	    piece < (uint64_t*)((uint8_t*)&chess_board.White.Pawns + 6*sizeof(uint64_t)); piece++, table++ ) {
@@ -126,7 +97,19 @@ inline int score( Chess_Board chess_board ) {
 			mg_eval += mg_pst_table[table] [indices[i]^56];
 			eg_eval += eg_pst_table[table] [indices[i]^56];
 			game_phase += piece2phase[table];
-		//if( table == 1 ) cout << mg_pst_table[table] [indices[i]^56] << " " << (indices[i]^56) << endl;
+			i++;
+		}
+	}
+	// Black Pieces Table Score
+	for( uint64_t* piece = (uint64_t*)&chess_board.Black.Pawns, table = 0;
+	    piece < (uint64_t*)((uint8_t*)&chess_board.Black.Pawns + 6*sizeof(uint64_t)); piece++, table++ ) {
+
+		indexer( *piece, indices );
+		i = 0;
+		while( indices[i] != -1 ) {
+			mg_eval -= mg_pst_table[table] [indices[i]];
+			eg_eval -= eg_pst_table[table] [indices[i]];
+			game_phase += piece2phase[table];
 			i++;
 		}
 	}

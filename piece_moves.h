@@ -36,19 +36,6 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 		pawn_col  = rel_col ( indices[i] );
 		//cout << " pawn rank, col " << indices[i] << ":"<< pawn_rank << "  " << pawn_col <<"\n";
 
-		index_update = indices[i] +  8*i_turn;	  // Square in front
-		if( (not_all_pieces >> index_update) & 1 ) {
-
-			BIT_SET(moves_add[n_moves].bitmove, indices[i]);
-			BIT_SET(moves_add[n_moves].bitmove, index_update);
-			moves_add[n_moves].piece = pawn;
-			n_moves++;
-			if( pawn_rank == 7 ) { // Promote
-				add_promotes( &moves_add[n_moves-1] );
-				n_moves += 3;
-			}
-		}
-
 		if( pawn_col != off7 ) {
 			index_update = indices[i] +  7*i_turn; // Capturable left
 			if( (their_pieces >> index_update) & 1 ) {
@@ -119,6 +106,19 @@ inline int pawn_moves  ( Moves *moves_add, uint64_t pawns,   uint64_t their_piec
 			}
 		}
 
+		index_update = indices[i] +  8*i_turn;	  // Square in front
+		if( (not_all_pieces >> index_update) & 1 ) {
+
+			BIT_SET(moves_add[n_moves].bitmove, indices[i]);
+			BIT_SET(moves_add[n_moves].bitmove, index_update);
+			moves_add[n_moves].piece = pawn;
+			n_moves++;
+			if( pawn_rank == 7 ) { // Promote
+				add_promotes( &moves_add[n_moves-1] );
+				n_moves += 3;
+			}
+		}
+
 		i++;
 	}
 
@@ -159,19 +159,19 @@ inline int bishop_moves( Moves *moves_add, uint64_t bishops, uint64_t their_piec
 			index_update = indices[i];
 			while( n_count < count_to_edge[indices[i]][n_direction] ) {
 				index_update += index_directions[n_direction];
-				if( (not_all_pieces >> index_update) & 1 ) { 	     // Empty
+                                if( (their_pieces >> index_update) & 1 ) {	     // Capture
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 					moves_add[n_moves].piece   = bishop;
 					n_moves++;
-                                        n_count++;
+					n_count = 7;
                                 }
-                                else if( (their_pieces >> index_update) & 1 ) {      // Capture
+				else if( (not_all_pieces >> index_update) & 1 ) {    // Empty
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 					moves_add[n_moves].piece   = bishop;
 					n_moves++;
-                                    	n_count = 7;
+					n_count++;
                                 }
                                 else { n_count = 7; }                                // Occupado
 			}
@@ -203,16 +203,7 @@ inline int rook_moves  ( Moves *moves_add, uint64_t rooks,   uint64_t their_piec
 			index_update = indices[i];
 			while( n_count < count_to_edge[indices[i]][n_direction] ) {
 				index_update += index_directions[n_direction];
-				if( (not_all_pieces >> index_update) & 1 ) { 	     // Empty
-					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
-					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
-					moves_add[n_moves].piece   = rook;
-					if(      rm_k_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 1+bit_offset ); }
-					else if( rm_q_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 2+bit_offset ); }
-					n_moves++;
-                                        n_count++;
-                                }
-                                else if( (their_pieces >> index_update) & 1 ) {      // Capture
+                                if( (their_pieces >> index_update) & 1 ) {	     // Capture
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 					moves_add[n_moves].piece   = rook;
@@ -220,6 +211,15 @@ inline int rook_moves  ( Moves *moves_add, uint64_t rooks,   uint64_t their_piec
 					else if( rm_q_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 2+bit_offset ); }
 					n_moves++;
                                         n_count = 7;
+                                }
+				else if( (not_all_pieces >> index_update) & 1 ) {    // Empty
+					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
+					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
+					moves_add[n_moves].piece   = rook;
+					if(      rm_k_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 1+bit_offset ); }
+					else if( rm_q_castle ) { BIT_CLEAR( moves_add[n_moves].parameters, 2+bit_offset ); }
+					n_moves++;
+                                        n_count++;
                                 }
                                 else { n_count = 7; }                                // Occupado
 			}
@@ -242,19 +242,19 @@ inline int queen_moves ( Moves *moves_add, uint64_t queens,  uint64_t their_piec
 			index_update = indices[i];
 			while( n_count < count_to_edge[indices[i]][n_direction] ) {
 				index_update += index_directions[n_direction];
-				if( (not_all_pieces >> index_update) & 1 ) { 	     // Empty
-					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
-					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
-					moves_add[n_moves].piece   = queen;
-					n_moves++;
-                                        n_count++;
-                                }
-                                else if( (their_pieces >> index_update) & 1 ) {      // Capture
+                                if( (their_pieces >> index_update) & 1 ) {	     // Capture
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
 					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
 					moves_add[n_moves].piece   = queen;
 					n_moves++;
                                         n_count = 7;
+                                }
+				else if( (not_all_pieces >> index_update) & 1 ) {    // Empty
+					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,index_update);
+					moves_add[n_moves].bitmove = BIT_SET(moves_add[n_moves].bitmove,indices[i]);
+					moves_add[n_moves].piece   = queen;
+					n_moves++;
+                                        n_count++;
                                 }
                                 else { n_count = 7; }                                // Occupado
 			}
