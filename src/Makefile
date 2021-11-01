@@ -8,8 +8,7 @@ CHESSoFiles  = ${CHESSFiles:.cpp=.o}
 RANDOMERFiles  := $(shell ls *.cpp)
 RANDOMERFiles  := $(filter-out chess.cpp, $(RANDOMERFiles))
 RANDOMERoFiles  = ${RANDOMERFiles:.cpp=.o}
-HEADERFiles  = functions.h global.h piece_moves.h piece_moves.h check_check.h preform_move.h initialize.h
-#HEADERFiles  = 
+HEADERFiles  = $(shell ls *.h)
 
 all: chess randomer
 

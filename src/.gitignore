@@ -1,5 +1,7 @@
 *.o
 *.fen
 chess
+chess.exe
 randomer
+randomer.exe
 bitboards/
