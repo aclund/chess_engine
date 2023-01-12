@@ -6,6 +6,7 @@
 #include <inttypes.h>
 #include <vector>
 #include <random>
+#include <mpi.h>
 
 using namespace std;
 
@@ -95,6 +96,9 @@ struct Search {
 	int eval;
 	int best_move;
 };
+
+extern int num_procs, myid, i_root;
+extern bool l_root;
 
 extern int user_turn, max_depth;
 

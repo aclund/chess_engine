@@ -1,25 +1,21 @@
 #include <fstream>
 #include "functions.h"
 
-//void convert_FEN(string FEN, int board_out[8][8]) {
 int convert_fen( Chess_Board *bitboards ) {
 
-	int ierr = 0;
-	string FEN;
+	int ierr = 0, fen_length = 100;
+	char FEN[fen_length];
 
-	ifstream fenfile;
-	fenfile.open("position.fen");
-	if( fenfile.fail() ) {
-		cout << " Could NOT find file 'position.fen'!\n";
-		ierr = 1;
+	if( l_root ) {
+		ifstream fenfile;
+		fenfile.open("position.fen");
+		if( fenfile.fail() ) {
+			cout << " Could NOT find file 'position.fen'!\n";
+			ierr = 1;
+		}
+		fenfile.getline( FEN, fen_length );
 	}
-
-	fenfile.seekg(0, ios::end);   
-	FEN.reserve(fenfile.tellg());
-	fenfile.seekg(0, ios::beg);
-
-	FEN.assign((istreambuf_iterator<char>(fenfile)),
-        	    istreambuf_iterator<char>());
+	MPI_Bcast( &FEN, fen_length, MPI_CHAR, i_root, MPI_COMM_WORLD );
 
 	int board[64];
 	for( int i=0; i<64; i++ ) {
@@ -78,7 +74,7 @@ int convert_fen( Chess_Board *bitboards ) {
 	if( ifen == '-' ) { params[5] = -1; }
 	else { 
 		int pawn_row, pawn_col;
-		index_square( FEN.substr(end+1,end+2), &pawn_row, &pawn_col );
+		index_square( string(1,FEN[end+1]) + FEN[end+2], &pawn_row, &pawn_col );
 		params[5] = rc2index( pawn_row, pawn_col );
 		//cout<< pawn_row << " " << pawn_col << " " << params[5] << endl;
 	}

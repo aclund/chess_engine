@@ -8,6 +8,8 @@ mt19937_64 rand_64::rng;
 
 int main(int argc, char *argv[]) {
 
+	setup_mpi( argc, argv );
+
 	// Command line arguments
 	bool read_fen = false, random = false, run = true;
 	for( int i = 1; i < argc; i++ ) {
@@ -24,19 +26,28 @@ int main(int argc, char *argv[]) {
 	// Use [--fen] string to initialize board from file position.fen
 	if( read_fen ) {
 		ierr = convert_fen( &chess_board );
-		if( ierr != 0 ) { return 0; }
 	}
 	else{ initial_position( &chess_board ); }
-
-	// Set user color
-	if( run or random ) { ask_user( run ); }
-	else { user_turn = 1; }
+	stop_on_error( ierr );
 
 	// Global piece moves and values
 	set_moves( );
 
+	int rand_seed;
+	if( l_root ) {
+		// Set user color
+		if( run or random ) { ask_user( run ); }
+		else { user_turn = 0; }
+
+		// Same random seed
+		rand_seed = time(0);
+	}
+	MPI_Bcast( &user_turn, 1, MPI_INT, i_root, MPI_COMM_WORLD );
+	MPI_Bcast( &max_depth, 1, MPI_INT, i_root, MPI_COMM_WORLD );
+	MPI_Bcast( &rand_seed, 1, MPI_INT, i_root, MPI_COMM_WORLD );
+
 	// Seed random number generator
-	rand_64::seed(time(0));
+	rand_64::seed(rand_seed);
 
 	// Hash table that stores every previous position hash
 	Hash hash_history;
@@ -46,10 +57,11 @@ int main(int argc, char *argv[]) {
 	while( !game_over( chess_board, hash_history ) ) {
 
 		// Error catch
-		ierr = check_bits( chess_board ); if( ierr != 0 ) { return 0; }
+		ierr = check_bits( chess_board );
+		stop_on_error( ierr );
 
 		// Write board
-		write_board( chess_board );
+		if( l_root ) { write_board( chess_board ); }
 
 		// Execute move
 		if( (chess_board.Parameters & 1) == user_turn ) {
@@ -62,7 +74,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Write position to file
-		last_known_board( chess_board );
+		if( l_root ) { last_known_board( chess_board ); }
 
 		// Store current hash
 		hash_history.append( chess_board );
@@ -71,7 +83,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Write Game Over
-	is_over( chess_board, hash_history, move_counter );
+	if( l_root ) { is_over( chess_board, hash_history, move_counter ); }
 
+	MPI_Finalize( );
 	return 0;
 }

@@ -56,6 +56,9 @@ bool Hash::rep3fold() {
 	return false;
 }
 
+int num_procs, myid, i_root = 0;
+bool l_root;
+
 int user_turn, max_depth;
 
 //                     pawns, knights, bishops, rooks, queens, king

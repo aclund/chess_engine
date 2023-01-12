@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+void setup_mpi(int,char**);
+void stop_on_error(int);
 void initial_position(Chess_Board*);
 int convert_fen(Chess_Board*);
 void set_moves();
