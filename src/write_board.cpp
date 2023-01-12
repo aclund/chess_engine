@@ -1,10 +1,4 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
 #include "colormod.h"
 
 void squares( int board_in[64], int row ) {
@@ -86,7 +80,10 @@ void squares( int board_in[64], int row ) {
 	return;
 }
 
-void write_board( int board_in[64], int *params_in ) {
+void write_board( Chess_Board bitboards ) {
+
+	int board[64], params[6];
+	convert2board( bitboards, board, params );
 
 	cout << "\e[1m";
 	cout << "\n";
@@ -95,24 +92,24 @@ void write_board( int board_in[64], int *params_in ) {
 
 	int row;
         for( int i = 0; i < 8; i++ ) {
-		if(      user_turn == -1 ) { row = i + 1; }
-		else if( user_turn ==  1 ) { row = 8 - i; }
+		if(      user_turn == 1 ) { row = i + 1; }
+		else if( user_turn == 0 ) { row = 8 - i; }
 		else{ cout << " ERROR in write_board_in\n"; }
 
-                squares(board_in, row-1);
+                squares(board, row-1);
 	}
 
-	if(      params_in[0] ==  1 ) { cout << "  WHITE to move - "; }
-	else if( params_in[0] == -1 ) { cout << "  BLACK to move - "; }
+	if(      params[0] ==  1 ) { cout << "  WHITE to move - "; }
+	else if( params[0] == -1 ) { cout << "  BLACK to move - "; }
 	else { cout << " ERROR: i_turn in write "; }
 
-	/*
-	if( params_in[1] == 1 ) { cout << "K"; }
-	if( params_in[2] == 1 ) { cout << "Q"; }
-	if( params_in[3] == 1 ) { cout << "k"; }
-	if( params_in[4] == 1 ) { cout << "q"; }
-	cout << "  " << params_in[5] << "\n";
-	*/
+#ifdef DEBUG
+	if( params[1] == 1 ) { cout << "K"; }
+	if( params[2] == 1 ) { cout << "Q"; }
+	if( params[3] == 1 ) { cout << "k"; }
+	if( params[4] == 1 ) { cout << "q"; }
+	cout << "  " << params[5] << "\n";
+#endif
 
 	cout << "\n\e[0m\n\n";
 

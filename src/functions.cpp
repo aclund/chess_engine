@@ -1,8 +1,3 @@
-#include <string>
-//#include <iostream>
-//using namespace std;
-
-#include "global.h"
 #include "functions.h"
 
 void print_binary(uint64_t number)
@@ -11,6 +6,20 @@ void print_binary(uint64_t number)
 		print_binary(number >> 1);
 	}
 	putc((number & 1) ? '1' : '0', stdout);
+}
+
+void bits2squares( uint64_t bitmove ) {
+	int square = 0;
+	while( square < 64 ) {
+		uint64_t test_bit = 0;
+		BIT_FLIP( test_bit, square );
+		if( bitmove & test_bit ) {
+			cout << square+1 << " ";
+		}
+		square++;
+	}
+	cout << "\n";
+	return;
 }
 
 bool in_range(int row, int col) {

@@ -1,5 +1,7 @@
-inline void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces, uint64_t not_all_pieces,
-			 int i_turn, int *n_checks ) {
+#include "functions.h"
+#include "piece_moves.h"
+
+void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces, uint64_t not_all_pieces, int i_turn, int *n_checks ) {
 
 	int n_count = 0;
 

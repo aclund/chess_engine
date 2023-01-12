@@ -1,23 +1,12 @@
-#include <iostream>
-using namespace std;
-
-#include "global.h"
 #include "functions.h"
-#include "convert_binary.h"
 
 void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
 
         cout << "- Last Move -\n";
-        int index;
 
         for( int n = 0; n < n_moves; n++ ) {
                 //cout << " " << n+1 << ":  ";
-		index = -1;
-                if( moves_print[n].piece != 7 ) {
-                        convert_binary( (moves_print[n].bitmove & ~your_pieces), &index );
-                }
-                switch( moves_print[n].piece ) {
-                  case 7: // CASTLE
+                if( moves_print[n].piece == 7 ) {
                         if(      (moves_print[n].bitmove >>  7) & 1 ) { // K
                                 cout << "White Castle King\n";
                         }
@@ -30,7 +19,9 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                         else if( (moves_print[n].bitmove >> 56) & 1 ) { // q
                                 cout << "Black Castle Quenn\n";
                         }
-                  break;
+                  	break;
+                }
+                switch( moves_print[n].piece ) {
                   case 1: // PAWN
                         cout << " Pawn";
                   break;
@@ -69,6 +60,9 @@ void print_moves( Moves *moves_print, int n_moves, uint64_t your_pieces ) {
                         cout << " ERROR printing move...?\n";
                   break;
                 }
+
+        	int index;
+		convert_binary( (moves_print[n].bitmove & ~your_pieces), &index );
                 cout << index2square(index);
                 cout << "\n";
 

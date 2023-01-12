@@ -1,7 +1,13 @@
 #ifndef Globals
 #define Globals
 
+#include <iostream>
+#include <string>
 #include <inttypes.h>
+#include <vector>
+#include <random>
+
+using namespace std;
 
 /* a=target variable, b=bit number to act upon 0-n */
 #define BIT_SET(a,b) ((a) |= (1ULL<<(b)))
@@ -9,6 +15,17 @@
 #define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
 #define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b))))        // '!!' to make sure this returns 0 or 1
 
+inline void convert_binary( uint64_t bit, int *indices ) {
+	int offset;
+	int i = 0;
+	while( bit ) {
+		offset = __builtin_clzll(bit);
+		indices[i] = 63-offset;
+		BIT_FLIP(bit,63-offset);
+		i++;
+	}
+	return;
+}
 
 struct Pieces {
 	uint64_t Pawns;
@@ -28,26 +45,55 @@ struct Chess_Board {
 
 	uint32_t Parameters;
 };
-extern Chess_Board bitboards;
+
+struct rand_64 {
+private:
+    static mt19937_64 rng;
+public:
+    static void seed(uint64_t new_seed = mt19937_64::default_seed) {
+        rng.seed(new_seed);
+    }
+    static uint64_t get() {
+        return rng();
+    }
+};
+
+struct Hash {
+private:
+	vector<uint64_t> hash_list;
+	uint64_t hash_table[64][12];
+	uint64_t hash_table_b2m;
+public:
+	Hash();
+	void print( );
+	void append( Chess_Board );
+	bool rep3fold( );
+};
 
 typedef struct Moves_s Moves;
 typedef struct Move_Tree_s Move_Tree;
 struct Moves_s {
 	Move_Tree *children;
-	//Move_Tree *parents;
 
 	uint64_t bitmove;
 	uint32_t parameters;
 	uint8_t  piece;
+
+	Moves_s() {
+		children = nullptr;
+	}
 };
 struct Move_Tree_s {
-	int n_moves;
-	Moves *moves_arr;
+	vector<Moves> moves_arr;
+	Moves *best;
+	Move_Tree_s() {
+		best = nullptr;
+	}
 };
 
-struct Moves_temp {
-	uint64_t bitmove;
-	uint8_t  piece;
+struct Search {
+	int eval;
+	int best_move;
 };
 
 extern int user_turn, max_depth;
@@ -60,7 +106,6 @@ extern const int castle, en_passant;
 
 extern int move_index, move_row, move_column, move_piece, max_moves;
 
-extern int board[64], *params, n_params;
 extern int mg_pieces[6], mg_pawn_table[64], mg_knight_table[64], mg_bishop_table[64],
 	   mg_rook_table[64], mg_queen_table[64], mg_king_table[64], *mg_pst_table[6],
 	   eg_pieces[6], eg_pawn_table[64], eg_knight_table[64], eg_bishop_table[64],

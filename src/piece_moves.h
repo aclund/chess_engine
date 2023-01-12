@@ -1,3 +1,4 @@
+#include "global.h"
 inline int rel_rank( int i, int i_turn ) {
 	return int((1-i_turn)*4.5) + (int(i/8)+1)*i_turn;
 }
@@ -273,7 +274,7 @@ inline int king_moves  ( Moves *moves_add, uint64_t Sr_king, uint64_t your_piece
 
         int bit_offset = 0 + (1-i_turn);
 
-        int n_checks, index_update;
+        int index_update;
         for( int n_direction = 0; n_direction < 8; n_direction++ ) {
                 index_update = index_curr + index_directions[n_direction];
                 if( count_to_edge[index_curr][n_direction] != 0 ) {

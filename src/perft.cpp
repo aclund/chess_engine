@@ -1,36 +1,21 @@
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
-#include "initialize.h"
-#include "convert_binary.h"
-#include "preform_move.h"
 
 void print_depth2(Move_Tree*);
 int count_moves(Move_Tree*);
 int count_bottom(Move_Tree*,int);
 
-void perft( ) {
+void perft( Chess_Board bitboards, Hash history ) {
 
         clock_t start = clock();
 
 	cout << "\n Calculating... \n";
 
-	Move_Tree *root = new Move_Tree;
-	*root = (Move_Tree){ 0 };
-
 	//Find Depth 0
-	root->moves_arr = newMoves( bitboards.Parameters, max_moves );
-	int n_possible_moves = 0;
-	all_moves( bitboards, root->moves_arr, &n_possible_moves );
-	root->n_moves = n_possible_moves;
+	Move_Tree *root = new Move_Tree;
+	all_moves( bitboards, root->moves_arr );
 
-	generator( bitboards, root, max_depth-1 );
+	generator( bitboards, root, history, max_depth-1 );
 
         clock_t for_moves = clock();
 
@@ -74,7 +59,7 @@ void perft( ) {
 
 int count_moves( Move_Tree *head ) {
 	int counter = 0;
-	for( int n = 0; n < head->n_moves; n++ ) {
+	for( int n = 0; n < head->moves_arr.size(); n++ ) {
 		counter++;
 		if( head->moves_arr[n].children != NULL ) {
 			counter += count_moves( head->moves_arr[n].children );
@@ -85,10 +70,10 @@ int count_moves( Move_Tree *head ) {
 
 int count_bottom( Move_Tree *head, int depth ) {
 	int counter = 0;
-	for( int n = 0; n < head->n_moves; n++ ) {
+	for( int n = 0; n < head->moves_arr.size(); n++ ) {
 		if( head->moves_arr[n].children != NULL ) {
 			if( depth == 1 ) {
-				counter += head->moves_arr[n].children->n_moves;
+				counter += head->moves_arr[n].children->moves_arr.size();
 			}
 			else {
 				counter += count_bottom( head->moves_arr[n].children, depth-1 );
@@ -100,12 +85,12 @@ int count_bottom( Move_Tree *head, int depth ) {
 
 void print_depth2( Move_Tree *head ) {
 	Move_Tree *child = NULL;
-	for( int n = 0; n < head->n_moves; n++ ) {
+	for( int n = 0; n < head->moves_arr.size(); n++ ) {
 		print_binary(head->moves_arr[n].bitmove); printf("\n");
 		cout<< "CHILDREN\n";
 		child = head->moves_arr[n].children;
-		cout << " #MOVES =" << child->n_moves << endl;
-		for( int n = 0; n < child->n_moves; n++ ) {
+		cout << " #MOVES =" << child->moves_arr.size() << endl;
+		for( int n = 0; n < child->moves_arr.size(); n++ ) {
 			print_binary(child->moves_arr[n].bitmove); printf("\n");
 		}
 		printf("\n");

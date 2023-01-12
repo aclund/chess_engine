@@ -1,37 +1,37 @@
-#include <string>
-using namespace std;
-
 #ifndef functions
 #define functions
 
 #include "global.h"
 
-void set_bitboards();
+void initial_position(Chess_Board*);
+int convert_fen(Chess_Board*);
 void set_moves();
-void all_moves(Chess_Board,Moves*,int*);
-//int in_check(Moves*,Chess_Board,Moves_temp,uint64_t,int);
-//int king_moves(Moves*,uint64_t,uint64_t,Pieces*,uint64_t,int);
-//void check_check(uint64_t,uint64_t,Pieces*,uint64_t,uint64_t*,int*);
-void random_player();
-void engine();
-void generator(Chess_Board,Move_Tree*,int);
-int minimax(Chess_Board,Move_Tree*,int,int,int,bool,int*);
-void convert2board();
-void convert2bits();
-void is_over(Chess_Board,int);
+void all_moves(Chess_Board,vector<Moves>&);
+Chess_Board preform_move(Chess_Board,Moves);
+void check_check(uint64_t,uint64_t,Pieces*,uint64_t,int,int*);
+bool in_check(Chess_Board);
+void random_player(Chess_Board*);
+void engine(Chess_Board*,Hash);
+void generator(Chess_Board,Move_Tree*,Hash,int);
+Search minimax(Chess_Board,Move_Tree*,Hash,int,int,int,bool);
+void convert2board(Chess_Board,int*,int*);
+void convert2bits(int*,int*,Chess_Board*);
+void is_over(Chess_Board,Hash,int);
+Moves* newMoves(uint32_t,int);
+void freeTree(Move_Tree*);
 
-void write_board(int*,int*);
-void move();
-int valid_move(string,int*);
+void write_board(Chess_Board);
+void move(Chess_Board*);
+int valid_move(Chess_Board,string,vector<Moves>,int*);
 void index_square(string,int*,int*);
-int convert_fen();
 void ask_user(bool);
-bool game_over( Chess_Board );
+bool game_over(Chess_Board,Hash);
 
 int check_bits(Chess_Board);
 void print_binary(uint64_t);
+void bits2squares(uint64_t);
 void print_moves(Moves*,int,uint64_t);
-void last_known_board();
+void last_known_board(Chess_Board);
 
 bool in_range(int,int);
 int rc2index(int,int);

@@ -1,9 +1,60 @@
 #include "global.h"
-#include "functions.h"
 
-Chess_Board bitboards;
-
-//int pawn_counter = 0, knight_counter = 0, bishop_counter = 0, rook_counter = 0, queen_counter = 0, king_counter = 0;
+Hash::Hash() {
+	for( int i=0; i<64; i++ ) {
+		for( int n=0; n<12; n++ ) {
+			hash_table[i][n] = rand_64::get();
+		}
+	}
+	hash_table_b2m = rand_64::get();
+}
+void Hash::print() {
+	for( int i=0; i<hash_list.size(); i++ ) {
+		cout << hash_list[i] << "\n";
+	}
+}
+void Hash::append( Chess_Board chess_board ) {
+	uint64_t new_hash = 0Ull;
+	int piece_ref = 0;
+	for( uint64_t* piece = (uint64_t*)&chess_board.White.Pawns;
+    		       piece < (uint64_t*)((uint8_t*)&chess_board.White.Pawns + 6*sizeof(uint64_t)); piece++ ) {
+		int index[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+		convert_binary( *piece, index );
+		int i = 0;
+		while( index[i] != -1 ) {
+			new_hash ^= hash_table[index[i]][piece_ref];
+			i++;
+		}
+		piece_ref++;
+	}
+	for( uint64_t* piece = (uint64_t*)&chess_board.Black.Pawns;
+    		       piece < (uint64_t*)((uint8_t*)&chess_board.Black.Pawns + 6*sizeof(uint64_t)); piece++ ) {
+		int index[9] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+		convert_binary( *piece, index );
+		int i = 0;
+		while( index[i] != -1 ) {
+			new_hash ^= hash_table[index[i]][piece_ref];
+			i++;
+		}
+		piece_ref++;
+	}
+	if( !(chess_board.Parameters & 1) ) {
+		new_hash ^= hash_table_b2m;
+	}
+	hash_list.push_back( new_hash );
+}
+bool Hash::rep3fold() {
+	if( hash_list.size() == 0 ) return false;
+	uint64_t current = hash_list.back();
+	int repeat = 0;
+	for( int i=hash_list.size()-2; i>=0; i-- ) {
+		if( hash_list[i] == current ) {
+			repeat++;
+			if( repeat == 2 ) return true;
+		}
+	}
+	return false;
+}
 
 int user_turn, max_depth;
 
@@ -21,9 +72,6 @@ const int castle     =  7;
 const int en_passant = 12;
 
 int move_index, move_row, move_column, move_piece, max_moves = 111;
-
-int n_params = 6;
-int  *params = new int[n_params];
 
 const uint8_t pawn   =  1;
 const uint8_t knight =  2;
@@ -44,12 +92,3 @@ const int b_bishop = -bishop;
 const int b_rook   = -rook;
 const int b_queen  = -queen;
 const int b_king   = -king;
-
-int board[64] = { w_rook, w_knight, w_bishop, w_queen, w_king, w_bishop, w_knight, w_rook,
-		  w_pawn, w_pawn,   w_pawn,   w_pawn,  w_pawn, w_pawn,   w_pawn,   w_pawn,
-		  0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0, 0, 0, 0, 0, 0,
-		  0, 0, 0, 0, 0, 0, 0, 0,
-		  b_pawn, b_pawn,   b_pawn,   b_pawn,  b_pawn, b_pawn,   b_pawn,   b_pawn,
-		  b_rook, b_knight, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook };

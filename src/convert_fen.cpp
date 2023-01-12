@@ -1,20 +1,11 @@
-#include <string>
-#include <iostream>
 #include <fstream>
-#include <streambuf>
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
 
 //void convert_FEN(string FEN, int board_out[8][8]) {
-int convert_fen() {
+int convert_fen( Chess_Board *bitboards ) {
 
 	int ierr = 0;
 	string FEN;
-
-	int board_in[8][8];
 
 	ifstream fenfile;
 	fenfile.open("position.fen");
@@ -30,10 +21,9 @@ int convert_fen() {
 	FEN.assign((istreambuf_iterator<char>(fenfile)),
         	    istreambuf_iterator<char>());
 
-	for( int row = 0; row < 8; row++ ) {
-		for( int column = 0; column < 8; column++ ) {
-			board_in[row][column] = 0;
-		}
+	int board[64];
+	for( int i=0; i<64; i++ ) {
+		board[i] = 0;
 	}
 
 	int i = 0;
@@ -43,32 +33,25 @@ int convert_fen() {
 	while( ifen != ' ' ) {
 		if( ifen == '/' ) { row++; column = 0; }
 		else if( string("12345678").find(ifen) != string::npos ) { column += (int)ifen-48; }
-		else if( ifen == 'P' ) { board_in[row][column] = w_pawn; column++; }
-		else if( ifen == 'N' ) { board_in[row][column] = w_knight; column++; }
-		else if( ifen == 'B' ) { board_in[row][column] = w_bishop; column++; }
-		else if( ifen == 'R' ) { board_in[row][column] = w_rook; column++; }
-		else if( ifen == 'Q' ) { board_in[row][column] = w_queen; column++; }
-		else if( ifen == 'K' ) { board_in[row][column] = w_king; column++; }
-		else if( ifen == 'p' ) { board_in[row][column] = b_pawn; column++; }
-		else if( ifen == 'n' ) { board_in[row][column] = b_knight; column++; }
-		else if( ifen == 'b' ) { board_in[row][column] = b_bishop; column++; }
-		else if( ifen == 'r' ) { board_in[row][column] = b_rook; column++; }
-		else if( ifen == 'q' ) { board_in[row][column] = b_queen; column++; }
-		else if( ifen == 'k' ) { board_in[row][column] = b_king; column++; }
+		else if( ifen == 'P' ) { board[(7-row)*8+column] = w_pawn;   column++; }
+		else if( ifen == 'N' ) { board[(7-row)*8+column] = w_knight; column++; }
+		else if( ifen == 'B' ) { board[(7-row)*8+column] = w_bishop; column++; }
+		else if( ifen == 'R' ) { board[(7-row)*8+column] = w_rook;   column++; }
+		else if( ifen == 'Q' ) { board[(7-row)*8+column] = w_queen;  column++; }
+		else if( ifen == 'K' ) { board[(7-row)*8+column] = w_king;   column++; }
+		else if( ifen == 'p' ) { board[(7-row)*8+column] = b_pawn;   column++; }
+		else if( ifen == 'n' ) { board[(7-row)*8+column] = b_knight; column++; }
+		else if( ifen == 'b' ) { board[(7-row)*8+column] = b_bishop; column++; }
+		else if( ifen == 'r' ) { board[(7-row)*8+column] = b_rook;   column++; }
+		else if( ifen == 'q' ) { board[(7-row)*8+column] = b_queen;  column++; }
+		else if( ifen == 'k' ) { board[(7-row)*8+column] = b_king;   column++; }
 		i++;
 		ifen = FEN[i];
 	}
 	int end = i;
 
-	for( int row = 0; row < 8; row++ ) {
-		for( int column = 0; column < 8; column++ ) {
-			board[(7-row)*8+column] = board_in[row][column];
-			//cout << board_in[row][column] << "  ";
-		}
-		//cout << "\n";
-	}
-
-	for( int i = 0; i < n_params; i++ ) {
+	int params[6];
+	for( int i = 0; i < 6; i++ ) {
 		params[i] = 0;
 	}
 
@@ -100,7 +83,7 @@ int convert_fen() {
 		//cout<< pawn_row << " " << pawn_col << " " << params[5] << endl;
 	}
 
-	convert2bits( );
+	convert2bits( board, params, bitboards );
 
 	return ierr;
 }

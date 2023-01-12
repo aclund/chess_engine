@@ -1,8 +1,4 @@
-#include <iostream>
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
 
 void set_moves( ) {
 

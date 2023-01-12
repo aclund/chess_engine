@@ -1,14 +1,12 @@
 #include <fstream>
-#include <iostream>
-#include <string>
-using namespace std;
-
-#include "global.h"
 #include "functions.h"
 
 char piece_convert(int);
 
-void last_known_board( ) {
+void last_known_board( Chess_Board bitboards ) {
+
+	int board[64], params[6];
+	convert2board( bitboards, board, params );
 
 	ofstream fenfile;
 	fenfile.open( "last_known_position.fen", ofstream::out | ofstream::trunc );

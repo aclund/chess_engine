@@ -1,3 +1,7 @@
+//#include "global.h"
+
+#include "functions.h"
+
 inline uint32_t clear_hbits( uint32_t param_bits ) {
 	BIT_CLEAR( param_bits, 5  );
 	BIT_CLEAR( param_bits, 6  );
@@ -9,7 +13,7 @@ inline uint32_t clear_hbits( uint32_t param_bits ) {
 	return param_bits;
 }
 
-inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
+Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 
 	Chess_Board chess_next = chess_current;
 
@@ -31,7 +35,6 @@ inline Chess_Board preform_move( Chess_Board chess_current, Moves preform ) {
 	}
 	
 	// Perform Moves
-	int promote_index;
 	uint64_t temp;
 
 	curr_pieces->All ^= preform.bitmove;

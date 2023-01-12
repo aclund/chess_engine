@@ -1,16 +1,5 @@
-#include <string>
-#include <iostream>
-#include<bits/stdc++.h>
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
-#include "initialize.h"
-#include "convert_binary.h"
 #include "piece_moves.h"
-#include "check_check.h"
-#include "preform_move.h"
 
 uint8_t piece_convert(char piece) {
 	if(	   piece == 'p' ) {
@@ -29,7 +18,7 @@ uint8_t piece_convert(char piece) {
 	return 0;
 }
 
-int valid_move( string move_AN, int *moves_found ) {
+int valid_move( Chess_Board bitboards, string move_AN, vector<Moves> moves_add, int *target ) {
 
 	int ierr = 0;
 
@@ -62,12 +51,13 @@ int valid_move( string move_AN, int *moves_found ) {
           break;
 	}
 
+	int board[64], params[6];
+	convert2board( bitboards, board, params );
+
 	// If castle
 	uint64_t king_spot = 0;
-	//Moves_temp *check_pieces = newTemp(2);
 	int n_checks;
 	if( move_AN.find('o') != string::npos ) {
-		*moves_found = -1;
 
 		int castle_o = 0;
 		for( int n_read = 0; n_read < move_AN.length(); n_read++ ) {
@@ -92,7 +82,6 @@ int valid_move( string move_AN, int *moves_found ) {
 				BIT_SET( king_spot, index_s+index );
 				check_check( king_spot, your_pieces->All, their_pieces, 
 					     ~bitboards.All_Pieces, i_turn, &n_checks );
-					     //~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
 				if( n_checks != 0 ) {
 					cout << " Castling through check!\n";
 					return 1;
@@ -112,7 +101,6 @@ int valid_move( string move_AN, int *moves_found ) {
 				BIT_SET( king_spot, index_s-index );
 				check_check( king_spot, your_pieces->All, their_pieces, 
 					     ~bitboards.All_Pieces, i_turn, &n_checks );
-					     //~bitboards.All_Pieces, i_turn, check_pieces, &n_checks );
 				if( n_checks != 0 ) {
 					cout << " Castling through check!\n";
 					return 1;
@@ -127,7 +115,6 @@ int valid_move( string move_AN, int *moves_found ) {
 			return 1;
 		}
 	}
-	//delete[] check_pieces;
 
 	//Promote
 	bool promote = false;
@@ -136,7 +123,7 @@ int valid_move( string move_AN, int *moves_found ) {
 		promote = true;
 		read = move_AN[move_AN.find('=')+1];
 		if( string_move_piece.find(read) == string::npos ) {
-			cout << " CANNOT convert inputed promotion!\n";
+			cout << " CANNOT convert inputted promotion!\n";
 			return 1;
 		}
 		promote_piece = piece_convert(read) + 6;
@@ -186,18 +173,9 @@ int valid_move( string move_AN, int *moves_found ) {
 		}
 	}
 
-	Moves *moves_add = newMoves( bitboards.Parameters, max_moves );
-
-	int n_possible_moves = 0;
-	all_moves( bitboards, moves_add, &n_possible_moves );
-	*moves_found = n_possible_moves;
-	//cout << "# Possible Moves = " << n_possible_moves << "\n\n";
-
-	//print_moves( moves_add, n_possible_moves, your_pieces->All );
-
 	int duplicate_shield = 0;
 	int found[2] = {-1,-1};
-	for( int n = 0; n < n_possible_moves; n++ ) {
+	for( int n = 0; n < moves_add.size(); n++ ) {
 		if( moves_add[n].piece == move_piece or (abs(move_piece)==pawn and moves_add[n].piece == 12) ) {
 			int indices[3] = {-1,-1,-1};
 			convert_binary( moves_add[n].bitmove, indices );
@@ -233,16 +211,12 @@ int valid_move( string move_AN, int *moves_found ) {
 			ierr = 1;
 		}
 		else {
-			print_moves( &moves_add[found[distinguish]], 1, your_pieces->All );
-			bitboards = preform_move( bitboards, moves_add[found[distinguish]] );
+			*target = found[distinguish];
 		}
 	}
 	else {
-		print_moves( &moves_add[found[0]], 1, your_pieces->All );
-		bitboards = preform_move( bitboards, moves_add[found[0]] );
+		*target = found[0];
 	}
-
-	delete[] moves_add;
 
 	return ierr;
 }

@@ -1,15 +1,7 @@
-#include <iostream>
-using namespace std;
-
-#include "global.h"
-//#include "functions.h"
-#include "initialize.h"
-#include "convert_binary.h"
+#include "functions.h"
 #include "piece_moves.h"
-#include "check_check.h"
-#include "preform_move.h"
 
-void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves ) {
+void all_moves( Chess_Board chess_board, vector<Moves>& moves_add ) {
 
 	int n_moves = 0;
 
@@ -51,10 +43,9 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 ///*
 //Legal Move Check
 
-	int n_moves_all = 0;
 	Moves *moves_all = newMoves( chess_board.Parameters, max_moves );
-	n_moves_all = piecey_pie_moves( &moves_all[n_moves_all], your_pieces, their_pieces->All,
-					not_all_pieces, t_en_passant, i_turn );
+	int  n_moves_all = piecey_pie_moves( moves_all, your_pieces, their_pieces->All,
+					     not_all_pieces, t_en_passant, i_turn );
 
 	for( int n = 0; n < n_moves_all; n++ ) {
 		chess_moved = preform_move( chess_board, moves_all[n] );
@@ -62,17 +53,16 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 			     ~chess_moved.All_Pieces, i_turn, &n_checks );
 		//cout << " # checks = " << n_checks << " move piece " << moves_all[n].piece << endl;
 		if( n_checks == 0 ) {
-			moves_add[n_moves] = moves_all[n];
+			moves_add.push_back(moves_all[n]);
 			n_moves++;
 		}
 	}
-	delete[] moves_all;
 //*/
 
 	// Castling Rights
 	check_check( your_pieces->King, your_pieces->All, their_pieces, 
 		     ~chess_board.All_Pieces, i_turn, &n_checks );
-	if( n_checks != 0 ) { *n_possible_moves = n_moves; return; }
+	if( n_checks != 0 ) { return; }
 
 	int bit_offset = 0 + (1-i_turn);
 	int index_king = 4 + (1-i_turn)*28;
@@ -99,12 +89,13 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 				     ~chess_moved.All_Pieces, i_turn, &n_checks );
 			if( n_checks == 0 ) {
 				// CAN Castle
-				BIT_SET( moves_add[n_moves].bitmove, index_king   );
-				BIT_SET( moves_add[n_moves].bitmove, index_king+3 );
-				moves_add[n_moves].piece = 7;
-				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
-				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
-				n_moves++;
+				BIT_SET( moves_all[n_moves_all].bitmove, index_king   );
+				BIT_SET( moves_all[n_moves_all].bitmove, index_king+3 );
+				moves_all[n_moves_all].piece = 7;
+				BIT_CLEAR( moves_all[n_moves_all].parameters, 1 + bit_offset );;
+				BIT_CLEAR( moves_all[n_moves_all].parameters, 2 + bit_offset );;
+				moves_add.push_back(moves_all[n_moves_all]);
+				n_moves_all++;
 			}
 		}
 	}
@@ -128,19 +119,19 @@ void all_moves( Chess_Board chess_board, Moves *moves_add, int *n_possible_moves
 				     ~chess_moved.All_Pieces, i_turn, &n_checks );
 			if( n_checks == 0 ) {
 				// CAN Castle
-				BIT_SET( moves_add[n_moves].bitmove, index_king   );
-				BIT_SET( moves_add[n_moves].bitmove, index_king-4 );
-				moves_add[n_moves].piece = 7;
-				BIT_CLEAR( moves_add[n_moves].parameters, 1 + bit_offset );;
-				BIT_CLEAR( moves_add[n_moves].parameters, 2 + bit_offset );;
-				n_moves++;
+				BIT_SET( moves_all[n_moves_all].bitmove, index_king   );
+				BIT_SET( moves_all[n_moves_all].bitmove, index_king-4 );
+				moves_all[n_moves_all].piece = 7;
+				BIT_CLEAR( moves_all[n_moves_all].parameters, 1 + bit_offset );;
+				BIT_CLEAR( moves_all[n_moves_all].parameters, 2 + bit_offset );;
+				moves_add.push_back(moves_all[n_moves_all]);
+				n_moves_all++;
 			}
 		}
 	}
 		
-
-	*n_possible_moves = n_moves;
 	delete[] castle_through;
+	delete[] moves_all;
 
 	return;
 }

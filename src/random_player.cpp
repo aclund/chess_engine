@@ -1,39 +1,20 @@
-#include <string>
-#include <iostream>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
-#include "initialize.h"
-#include "convert_binary.h"
-#include "preform_move.h"
 
-void random_player() {
+void random_player( Chess_Board *bitboards ) {
 
-        Move_Tree *root = new Move_Tree;
+        // Find possible moves
+	vector<Moves> moves_arr;
+        all_moves( *bitboards, moves_arr );
+	if( moves_arr.size() == 0 ) { return; }
 
-        //Find Depth 0
-        root->moves_arr = newMoves( bitboards.Parameters, max_moves );
-        int n_possible_moves = 0;
-        all_moves( bitboards, root->moves_arr, &n_possible_moves );
-	root->n_moves = n_possible_moves;
+	int rand = (int)rand_64::get();
+	int rando_board = rand % moves_arr.size();
 
-	//cout << "# Possible Moves = " << n_possible_moves << "\n";
-	if( n_possible_moves == 0 ) { return; }
-
-	int ierr = check_bits( bitboards );
-	if( ierr != 0 ) { return; }
-
-	srand (time(NULL));
-	int rando_board = rand() % n_possible_moves;
-
-	bitboards = preform_move( bitboards, root->moves_arr[rando_board] );
-
-	delete[] root->moves_arr;
-	delete   root;
+	uint64_t print_pieces;
+	if( bitboards->Parameters & 1 ) { print_pieces = bitboards->Black.All; }
+	else 				{ print_pieces = bitboards->White.All; }
+	print_moves( &moves_arr[rando_board], 1, print_pieces );
+	*bitboards = preform_move( *bitboards, moves_arr[rando_board] );
 
 	return;
 }

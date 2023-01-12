@@ -1,12 +1,4 @@
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-
-using namespace std;
-
 #include "functions.h"
-#include "global.h"
 
 string removeSpaces(string str)  
 { 
@@ -15,27 +7,35 @@ string removeSpaces(string str)
     return str; 
 } 
 
-void move( ) {
+void move( Chess_Board *bitboards ) {
+
+	// Find Possible Moves
+	vector<Moves> moves_arr;
+	all_moves( *bitboards, moves_arr );
+	if( moves_arr.size() == 0 ) { return; }
 
 	string move_AN;
-	int ierr = 1;
+	int ierr = 1, target;
 	while( ierr != 0 ) {
 		cout << "Enter move\n\n";
 		cin  >> move_AN;
 		cout << "\n";
 		move_AN = removeSpaces(move_AN);
 	
-		int n_possible_moves;
-		ierr = valid_move( move_AN, &n_possible_moves );
+		ierr = valid_move( *bitboards, move_AN, moves_arr, &target );
+		if( ierr == 0 ) break;
 
-		if( ierr != 0 ) {
-			cout << "Either I suck at coding or you've forgotten the rules of CHESS!\n\n";
-			cout << "Enter move in Algebraic Notation:\n";
-			cout << "   nf3  Qd1  o-o  rfd1\n\n\n";
-			move_AN.clear();
-		}
-		else if( n_possible_moves == 0 ) { return; }
+		cout << "Either I suck at coding or you've forgotten the rules of CHESS!\n\n";
+		cout << "Enter move in Algebraic Notation:\n";
+		cout << "   nf3  Qd1  o-o  rfd1\n\n\n";
+		move_AN.clear();
 	}
+
+	uint64_t print_pieces;
+	if( bitboards->Parameters & 1 ) { print_pieces = bitboards->Black.All; }
+	else 				{ print_pieces = bitboards->White.All; }
+	print_moves( &moves_arr[target], 1, print_pieces );
+	*bitboards = preform_move( *bitboards, moves_arr[target] );
 
 	return;
 }

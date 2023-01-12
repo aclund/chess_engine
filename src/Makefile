@@ -1,26 +1,36 @@
-Compile    = g++
-Libraries  =
-#DebugFlag  = -g 
-OPTFlag    = -O3
-CHESSFiles  := $(shell ls *.cpp)
-CHESSFiles  := $(filter-out randomer.cpp, $(CHESSFiles))
-CHESSoFiles  = ${CHESSFiles:.cpp=.o}
-RANDOMERFiles  := $(shell ls *.cpp)
-RANDOMERFiles  := $(filter-out chess.cpp, $(RANDOMERFiles))
-RANDOMERoFiles  = ${RANDOMERFiles:.cpp=.o}
-HEADERFiles  = $(shell ls *.h)
+include compiler.spec
+include dependencies.make
 
-all: chess randomer
+OBJECTS = $(shell ls *cpp | sed 's/cpp/o/')
+HEADERFiles = $(shell ls *.h)
 
-chess:  $(CHESSoFiles)
-	$(Compile) -o chess  $(CHESSoFiles) $(OPTFlag) $(DebugFlag) $(Libraries)
+#-------------------------------------------------------------------------------
+#   Rule for building all programs
 
-randomer: $(RANDOMERoFiles)
-	$(Compile) -o randomer  $(RANDOMERoFiles) $(OPTFlag) $(DebugFlag) $(Libraries)
+all: $(PROGRAMS)
+	make $<
 
-$(CHESSoFiles): %.o: %.cpp $(HEADERFiles)
-	$(Compile) $(OPTFlag) $(DebugFlag) -c $<
+$(PROGRAMS): %:
+	$(COMPILE) $(FLAGS) $(LIBRARIES) $^ -o $@
+
+$(OBJECTS): %.o: %.cpp $(HEADERFiles)
+	$(COMPILE) $(FLAGS) -c $<
+
+#-------------------------------------------------------------------------------
+#   Rule for cleaning
 
 clean:
-	rm -f *.o chess randomer
+	rm -f *.o
+
+clean_all: clean
+	rm -f $(PROGRAMS)
 	touch *
+
+#-------------------------------------------------------------------------------
+#   Rule for compiler
+
+opt: clean
+	rm compiler.spec; ln -s compiler.opt compiler.spec
+
+debug: clean
+	rm compiler.spec; ln -s compiler.debug compiler.spec

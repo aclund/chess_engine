@@ -1,7 +1,3 @@
-#include <iostream>
-using namespace std;
-
-#include "global.h"
 #include "functions.h"
 
 int check_bits( Chess_Board chess_board ) {

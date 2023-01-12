@@ -1,6 +1,4 @@
-
 #include "global.h"
-#include "convert_binary.h"
 
 void reset( int *arr ) {
 	for( int i = 0; i < 9; i++ ) {
@@ -9,9 +7,9 @@ void reset( int *arr ) {
 }
 
 // Take global bitboards -> global board[][]
-void convert2board(){
+void convert2board( Chess_Board bitboards, int board[64], int params[6] ){
 
-	for( int n = 0; n < n_params; n++ ) {
+	for( int n = 0; n < 6; n++ ) {
 		params[n] = 0;
 	}
 
