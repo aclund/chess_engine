@@ -43,7 +43,8 @@ void all_moves( Chess_Board chess_board, vector<Moves>& moves_add ) {
 ///*
 //Legal Move Check
 
-	Moves *moves_all = newMoves( chess_board.Parameters, max_moves );
+	Moves moves_all[max_moves];
+	new_moves( moves_all, max_moves, chess_board.Parameters );
 	int  n_moves_all = piecey_pie_moves( moves_all, your_pieces, their_pieces->All,
 					     not_all_pieces, t_en_passant, i_turn );
 
@@ -67,7 +68,8 @@ void all_moves( Chess_Board chess_board, vector<Moves>& moves_add ) {
 	int bit_offset = 0 + (1-i_turn);
 	int index_king = 4 + (1-i_turn)*28;
 	
-	Moves *castle_through = newMoves( chess_board.Parameters, 1 );
+	Moves castle_through[1];
+	new_moves( castle_through, 1,chess_board.Parameters );
 	castle_through[0].piece = king;
 
 	//Castle King
@@ -129,9 +131,6 @@ void all_moves( Chess_Board chess_board, vector<Moves>& moves_add ) {
 			}
 		}
 	}
-		
-	delete[] castle_through;
-	delete[] moves_all;
 
 	return;
 }

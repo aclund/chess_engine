@@ -2,7 +2,7 @@
 
 inline int score(Chess_Board);
 
-Search minimax( Chess_Board chess_board, vector<Moves> moves_arr, Hash history, int depth, int alpha, int beta, bool maxer ) {
+Search minimax_tree( Chess_Board chess_board, Move_Tree *head, Hash history, int depth, int alpha, int beta, bool maxer ) {
 
 	int max_eval, min_eval;
 	Search found;
@@ -20,10 +20,10 @@ Search minimax( Chess_Board chess_board, vector<Moves> moves_arr, Hash history, 
 	}
 
 	// Game over
-	if( moves_arr.size() == 0 ) {
+	if( head->moves_arr.size() == 0 ) {
 		if( in_check(chess_board) ) {
 			if( maxer ) { found.eval = -9990 - depth; }
-			else        { found.eval =  9990 + depth; }
+			else 	    { found.eval =  9990 + depth; }
 		}
 		else { found.eval = 0; }
 		return found;
@@ -33,21 +33,23 @@ Search minimax( Chess_Board chess_board, vector<Moves> moves_arr, Hash history, 
 
 	if( maxer ) {
 		max_eval = -99999999;
-		for( int n = 0; n < moves_arr.size(); n++ ) {
-			chess_moved = preform_move( chess_board, moves_arr[n] );
+		for( int n = 0; n < head->moves_arr.size(); n++ ) {
+			chess_moved = preform_move( chess_board, head->moves_arr[n] );
 
 			// Hash update
 			Hash track = history;
 			track.append( chess_moved );
 
 			// Find moves at next depth
-			vector<Moves> moves_next;
+			Move_Tree *curr = new Move_Tree;
 			if( depth != 1 ) {
-				all_moves( chess_moved, moves_next );
+				all_moves( chess_moved, curr->moves_arr );
+				head->moves_arr[n].children = curr;
 			}
 
-			Search search = minimax( chess_moved, moves_next, track, depth-1, alpha, beta, false );
-			if( search.eval > max_eval ) { found.best_move = n; }
+			Search search = minimax_tree( chess_moved, head->moves_arr[n].children, track, depth-1,
+						 alpha, beta, false );
+			if( search.eval > max_eval ) { found.best_move = n; head->best = &head->moves_arr[n]; }
 			max_eval = max(	max_eval, search.eval );
 			alpha    = max( alpha,    search.eval );
 			if( beta <= alpha ) break;
@@ -57,21 +59,23 @@ Search minimax( Chess_Board chess_board, vector<Moves> moves_arr, Hash history, 
 	}
 	else {
 		min_eval =  99999999;
-		for( int n = 0; n < moves_arr.size(); n++ ) {
-			chess_moved = preform_move( chess_board, moves_arr[n] );
+		for( int n = 0; n < head->moves_arr.size(); n++ ) {
+			chess_moved = preform_move( chess_board, head->moves_arr[n] );
 
 			// Hash history
 			Hash track = history;
 			track.append( chess_moved );
 
 			// Find moves at next depth
-			vector<Moves> moves_next;
+			Move_Tree *curr = new Move_Tree;
 			if( depth != 1 ) {
-				all_moves( chess_moved, moves_next );
+				all_moves( chess_moved, curr->moves_arr );
+				head->moves_arr[n].children = curr;
 			}
 
-			Search search = minimax( chess_moved, moves_next, track, depth-1, alpha, beta, true );
-			if( search.eval < min_eval ) { found.best_move = n; }
+			Search search = minimax_tree( chess_moved, head->moves_arr[n].children, track, depth-1,
+						 alpha, beta, true );
+			if( search.eval < min_eval ) { found.best_move = n; head->best = &head->moves_arr[n]; }
 			min_eval = min(	min_eval, search.eval );
 			beta     = min( beta,     search.eval );
 			if( beta <= alpha ) break;

@@ -7,7 +7,8 @@ void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces
 
 	// Move all their pieces to see if capture king
 	uint32_t null_params = 0;
-	Moves *moves_check = newMoves( null_params, max_moves);
+	Moves moves_check[max_moves];
+	new_moves( moves_check, max_moves, null_params );
 
 	int n_moves_null = 0, null_passant = -1;
 	n_moves_null = piecey_pie_moves( moves_check, their_pieces, your_pieces, not_all_pieces,
@@ -18,7 +19,6 @@ void check_check( uint64_t your_king, uint64_t your_pieces, Pieces *their_pieces
 			n_count++;
 		}
 	}
-	delete[] moves_check;
 
 	*n_checks = n_count;
 

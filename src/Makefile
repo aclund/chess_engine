@@ -34,3 +34,6 @@ opt: clean
 
 debug: clean
 	rm compiler.spec; ln -s compiler.debug compiler.spec
+
+g: clean
+	rm compiler.spec; ln -s compiler.g++ compiler.spec

@@ -5,10 +5,7 @@ mt19937_64 rand_64::rng;
 int main(int argc, char *argv[]) {
 
 	// Command line arguments
-	bool read_fen = false;
-	for( int i = 1; i < argc; i++ ) {
-		if(      strcmp(argv[i], "--fen"    ) == 0 ) { read_fen = true; }
-	}
+	command_args( argc, argv );
 
 	int ierr = 0;
 	float move_counter = 1;

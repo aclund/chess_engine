@@ -4,6 +4,7 @@
 #include "global.h"
 
 void setup_mpi(int,char**);
+void command_args(int,char**);
 void stop_on_error(int);
 void initial_position(Chess_Board*);
 int convert_fen(Chess_Board*);
@@ -15,11 +16,13 @@ bool in_check(Chess_Board);
 void random_player(Chess_Board*);
 void engine(Chess_Board*,Hash);
 void generator(Chess_Board,Move_Tree*,Hash,int);
-Search minimax(Chess_Board,Move_Tree*,Hash,int,int,int,bool);
+Search minimax     (Chess_Board,vector<Moves>,Hash,int,int,int,bool);
+Search minimax_tree(Chess_Board,Move_Tree*,   Hash,int,int,int,bool);
 void convert2board(Chess_Board,int*,int*);
 void convert2bits(int*,int*,Chess_Board*);
 void is_over(Chess_Board,Hash,int);
 Moves* newMoves(uint32_t,int);
+void new_moves(Moves*,int,uint32_t);
 void freeTree(Move_Tree*);
 
 void write_board(Chess_Board);

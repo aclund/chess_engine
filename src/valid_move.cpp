@@ -1,5 +1,6 @@
 #include "functions.h"
 #include "piece_moves.h"
+#include <algorithm>
 
 uint8_t piece_convert(char piece) {
 	if(	   piece == 'p' ) {
@@ -140,12 +141,12 @@ int valid_move( Chess_Board bitboards, string move_AN, vector<Moves> moves_add, 
 						found_piece = true;
 				}
 				else if( move_letter_square.find(read) != string::npos ) {
-						move_square.insert( 0, &read );
+						move_square.insert( 0, 1, read );
 						letters++;
 				}
 				else if( move_number_square.find(read) != string::npos &&
 					 letters != 0 ) {
-						move_square.insert( 1, &read );
+						move_square.insert( 1, 1, read );
 						numbers++;
 				}
 		}

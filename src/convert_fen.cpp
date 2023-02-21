@@ -15,7 +15,9 @@ int convert_fen( Chess_Board *bitboards ) {
 		}
 		fenfile.getline( FEN, fen_length );
 	}
+#ifdef MPI_ON
 	MPI_Bcast( &FEN, fen_length, MPI_CHAR, i_root, MPI_COMM_WORLD );
+#endif
 
 	int board[64];
 	for( int i=0; i<64; i++ ) {

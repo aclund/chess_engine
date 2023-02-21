@@ -2,11 +2,14 @@
 #define Globals
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <inttypes.h>
 #include <vector>
 #include <random>
+
+#ifdef MPI_ON
 #include <mpi.h>
+#endif
 
 using namespace std;
 
@@ -79,17 +82,11 @@ struct Moves_s {
 	uint64_t bitmove;
 	uint32_t parameters;
 	uint8_t  piece;
-
-	Moves_s() {
-		children = nullptr;
-	}
 };
 struct Move_Tree_s {
 	vector<Moves> moves_arr;
 	Moves *best;
-	Move_Tree_s() {
-		best = nullptr;
-	}
+	Move_Tree_s() { best = nullptr; }
 };
 
 struct Search {
@@ -99,6 +96,8 @@ struct Search {
 
 extern int num_procs, myid, i_root;
 extern bool l_root;
+
+extern bool arg_color, arg_depth, basic, run, random_moves, read_fen;
 
 extern int user_turn, max_depth;
 

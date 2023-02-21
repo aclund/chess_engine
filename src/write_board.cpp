@@ -34,12 +34,22 @@ void squares( int board_in[64], int row ) {
 
         for( int i = 0; i < 8; i++ ) {
 
-		if( abs(board_in[row*8+i]) == pawn   ) { piece = "\u2659"; }
-		if( abs(board_in[row*8+i]) == knight ) { piece = "\u2658"; }
-		if( abs(board_in[row*8+i]) == bishop ) { piece = "\u2657"; }
-		if( abs(board_in[row*8+i]) == rook   ) { piece = "\u2656"; }
-		if( abs(board_in[row*8+i]) == queen  ) { piece = "\u2645"; }
-		if( abs(board_in[row*8+i]) == king   ) { piece = "\u2654"; }
+		if( basic ) {
+			if( abs(board_in[row*8+i]) == pawn   ) { piece = "P"; }
+			if( abs(board_in[row*8+i]) == knight ) { piece = "N"; }
+			if( abs(board_in[row*8+i]) == bishop ) { piece = "B"; }
+			if( abs(board_in[row*8+i]) == rook   ) { piece = "R"; }
+			if( abs(board_in[row*8+i]) == queen  ) { piece = "Q"; }
+			if( abs(board_in[row*8+i]) == king   ) { piece = "K"; }
+		}
+		else {
+			if( abs(board_in[row*8+i]) == pawn   ) { piece = "\u2659"; }
+			if( abs(board_in[row*8+i]) == knight ) { piece = "\u2658"; }
+			if( abs(board_in[row*8+i]) == bishop ) { piece = "\u2657"; }
+			if( abs(board_in[row*8+i]) == rook   ) { piece = "\u2656"; }
+			if( abs(board_in[row*8+i]) == queen  ) { piece = "\u2645"; }
+			if( abs(board_in[row*8+i]) == king   ) { piece = "\u2654"; }
+		}
 
 		if( col%2 == 0 ) {
 			cout << back_black;

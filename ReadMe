@@ -2,13 +2,14 @@
 		CHESS ENGINE
 
 
-  Old school chess-computer interface.
+Old school chess-computer interface.
 
+Can be compiled with or without mpi capabilities (mpic++/g++)
 
-		'make chess'
+Optional command line arguments:
+chess [-c/--color (w/b)] [-d/--depth #] [--fen] [-r/--random] [--off] [-b/--basic]
 
-  Move generation is still non-optimal and slow.
-  Suggested engine depth:
+Suggested engine depth:
 	4 - Easy
 	5 - Quick return
-	6 - ~45/60 seconds
+	6 - Longest

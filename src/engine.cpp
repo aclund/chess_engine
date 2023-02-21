@@ -3,7 +3,7 @@
 
 void engine( Chess_Board *bitboards, Hash hash_history ) {
 
-        clock_t start = clock();
+	clock_t start = clock();
 	if( l_root ) { cout << " Calculating... \n"; }
 
 	// Set maximizer and pieces to exclude in print
@@ -30,14 +30,19 @@ void engine( Chess_Board *bitboards, Hash hash_history ) {
 	}
 
 	// Minimax algorithm with alpha-beta pruning
-	Search minimaxed = minimax( *bitboards, split, hash_history, max_depth, -99999, 99999, maxer );
+#ifdef DEBUG
+	Search minimaxed = minimax_tree( *bitboards, split,            hash_history, max_depth, -99999, 99999, maxer );
+#else
+	Search minimaxed = minimax     ( *bitboards, split->moves_arr, hash_history, max_depth, -99999, 99999, maxer );
+#endif
 
 	// Determine global best
+	int best_proc, root_best_move;
+#ifdef MPI_ON
 	int size_Search = 2;
 	Search all_minimaxed[num_procs];
 	MPI_Gather( &minimaxed, size_Search, MPI_INT, all_minimaxed, size_Search, MPI_INT, i_root, MPI_COMM_WORLD );
 
-	int best_proc, root_best_move;
 	if( l_root ) {
 		// Determine best_proc from all_minimaxed[].eval
 		best_proc = 0;
@@ -68,6 +73,10 @@ void engine( Chess_Board *bitboards, Hash hash_history ) {
 	}
 	MPI_Bcast( &root_best_move, 1, MPI_INT, i_root, MPI_COMM_WORLD );
 	MPI_Bcast( &best_proc     , 1, MPI_INT, i_root, MPI_COMM_WORLD );
+#else
+	best_proc = myid;
+	root_best_move = minimaxed.best_move;
+#endif
 
 	if( myid == best_proc ) {
 		cout << " Time used: " << (clock()-start)/(double) CLOCKS_PER_SEC << "\n\n";
@@ -91,7 +100,7 @@ void engine( Chess_Board *bitboards, Hash hash_history ) {
 			tmp = tmp->best->children;
 
 			if( white ) { print_pieces = tmp_board.White.All; }
-			else 	    { print_pieces = tmp_board.Black.All; }
+			else        { print_pieces = tmp_board.Black.All; }
 			print_moves( tmp->best, 1, print_pieces );
 			tmp_board = preform_move( tmp_board, *tmp->best );
 
@@ -102,7 +111,7 @@ void engine( Chess_Board *bitboards, Hash hash_history ) {
 #endif
 
 	// Delete game tree
-	delete root_node;
+	freeTree( root_node );
 	freeTree( split );
 
 	return;
